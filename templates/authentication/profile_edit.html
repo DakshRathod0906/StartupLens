@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Profile - StartupLens{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="fw-bold mb-0">Edit Profile</h3>
+                    <a href="{% url 'authentication:profile' %}" class="btn btn-sm btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{% url 'authentication:profile_edit' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row mb-4 align-items-center">
+                        <div class="col-auto">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="Current Avatar" class="rounded-circle img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'images/default-avatar.png' %}" alt="Default Avatar" class="rounded-circle img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            <label for="{{ form.profile_picture.id_for_label }}" class="form-label fw-semibold">Profile Picture</label>
+                            {{ form.profile_picture }}
+                            {% if form.profile_picture.errors %}
+                                <div class="text-danger small mt-1">{{ form.profile_picture.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text">JPG, PNG, or WebP. Max 5MB.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label fw-semibold">First Name</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label fw-semibold">Last Name</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">Email Address</label>
+                        {{ form.email }}
+                        <div class="form-text">Email address cannot be changed currently.</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.bio.id_for_label }}" class="form-label fw-semibold">Bio</label>
+                        {{ form.bio }}
+                        {% if form.bio.errors %}
+                            <div class="text-danger small mt-1">{{ form.bio.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <hr class="mb-4">
+                    
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

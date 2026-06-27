@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Profile - StartupLens{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s Avatar" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'images/default-avatar.png' %}" alt="Default Avatar" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% endif %}
+                </div>
+                <h4 class="fw-bold mb-1">{{ user.first_name }} {{ user.last_name }}</h4>
+                <p class="text-muted mb-3">@{{ user.username }}</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'authentication:profile_edit' %}" class="btn btn-outline-primary">Edit Profile</a>
+                    <a href="{% url 'authentication:change_password' %}" class="btn btn-outline-secondary">Change Password</a>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 pt-0">
+                <ul class="list-group list-group-flush small">
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Role</span>
+                        <span class="badge bg-primary rounded-pill">{{ user.get_role_display }}</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Joined</span>
+                        <span class="fw-semibold">{{ user.date_joined|date:"M Y" }}</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-bottom-0">
+                        <span class="text-muted">Last Login</span>
+                        <span class="fw-semibold">{{ user.last_login|timesince }} ago</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h5 class="fw-bold border-bottom pb-3 mb-4">About Me</h5>
+                {% if user.bio %}
+                    <p class="text-body">{{ user.bio|linebreaks }}</p>
+                {% else %}
+                    <p class="text-muted fst-italic">No bio provided yet.</p>
+                {% endif %}
+                
+                <h5 class="fw-bold border-bottom pb-3 mb-4 mt-5">Account Information</h5>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <p class="mb-0 text-muted">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-body mb-0">
+                            {{ user.email }}
+                            {% if user.is_verified %}
+                                <span class="badge bg-success ms-2"><i class="bi bi-check-circle"></i> Verified</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark ms-2">Unverified</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0 text-muted">Account Status</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-body mb-0">
+                            {% if user.is_active %}
+                                <span class="text-success fw-semibold">Active</span>
+                            {% else %}
+                                <span class="text-danger fw-semibold">Inactive</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
