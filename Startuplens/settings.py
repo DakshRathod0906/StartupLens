@@ -44,6 +44,13 @@ INSTALLED_APPS = [
     
     # Third-party apps
     'django_extensions',
+    'rest_framework',
+    'reports',
+    'emails',
+    'investors',
+    'ai',
+    'ml',
+    'api',
     'crispy_forms',
     'crispy_bootstrap5',
 
@@ -165,11 +172,20 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
+            'format': '{levelname} {asctime} {name} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
             'style': '{',
         },
     },
     'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
         'file_app': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
@@ -182,12 +198,54 @@ LOGGING = {
             'filename': BASE_DIR / 'logs' / 'errors.log',
             'formatter': 'verbose',
         },
+        'file_ai': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'ai.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django': {
             'handlers': ['file_app', 'file_error'],
             'level': 'INFO',
             'propagate': True,
+        },
+        # Phase 10 service loggers
+        'reports': {
+            'handlers': ['file_app', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'emails': {
+            'handlers': ['file_app', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'investors': {
+            'handlers': ['file_app', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'ai': {
+            'handlers': ['file_ai', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'ml': {
+            'handlers': ['file_app', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'evaluation': {
+            'handlers': ['file_app', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'api': {
+            'handlers': ['file_app', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': False,
         },
     },
 }
@@ -196,3 +254,28 @@ LOGGING = {
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'api.renderers.StandardizedJSONRenderer',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+}
+
+# Email Configuration (Django built-in backend)
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@startuplens.com')

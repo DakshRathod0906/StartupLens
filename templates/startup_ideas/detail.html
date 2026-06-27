@@ -1,134 +1,160 @@
-{% extends "base.html" %}
+{% extends "layouts/workspace.html" %}
 
 {% block title %}{{ idea.title }} - StartupLens{% endblock %}
 
-{% block content %}
-<nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'startup_ideas:list' %}">My Ideas</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ idea.title }}</li>
-    </ol>
-</nav>
+{% block workspace_breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'startup_ideas:list' %}" class="text-decoration-none text-muted">Ideas</a></li>
+<li class="breadcrumb-item active text-dark fw-medium" aria-current="page">{{ idea.title|truncatechars:30 }}</li>
+{% endblock %}
 
-<div class="row">
-    <div class="col-lg-8 mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="fw-bold mb-0">{{ idea.title }}</h1>
-            <div class="d-flex gap-2">
-                {% if idea.status == 'ARCHIVED' %}
-                    <a href="{% url 'startup_ideas:restore' idea.slug %}" class="btn btn-outline-primary fw-semibold"><i class="bi bi-arrow-counterclockwise me-1"></i> Restore</a>
-                {% else %}
-                    <a href="{% url 'startup_ideas:edit' idea.slug %}" class="btn btn-outline-primary fw-semibold"><i class="bi bi-pencil me-1"></i> Edit</a>
-                    <a href="{% url 'startup_ideas:archive' idea.slug %}" class="btn btn-outline-warning fw-semibold"><i class="bi bi-archive me-1"></i> Archive</a>
-                {% endif %}
+{% block workspace_title %}{{ idea.title }}{% endblock %}
+
+{% block workspace_status %}
+    {% if idea.status == 'PUBLISHED' %}
+        <span class="badge badge-success">Published</span>
+    {% elif idea.status == 'ARCHIVED' %}
+        <span class="badge badge-warning">Archived</span>
+    {% else %}
+        <span class="badge bg-secondary">Draft</span>
+    {% endif %}
+{% endblock %}
+
+{% block workspace_subtitle %}
+    Updated {{ idea.updated_at|date:"M d, Y" }} &bull; Version {{ idea.version }}
+{% endblock %}
+
+{% block workspace_actions %}
+    {% if idea.status == 'ARCHIVED' %}
+        <form action="{% url 'startup_ideas:restore' idea.slug %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-arrow-counterclockwise me-1"></i> Restore</button>
+        </form>
+    {% else %}
+        <a href="{% url 'startup_ideas:edit' idea.slug %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil me-1"></i> Edit</a>
+        <a href="{% url 'startup_ideas:archive' idea.slug %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-archive me-1"></i> Archive</a>
+        <button class="btn btn-sm btn-primary" title="Analyze Idea"><i class="bi bi-search me-1"></i> Analyze</button>
+    {% endif %}
+{% endblock %}
+
+{% block workspace_stats %}
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card bg-white border-gray-200 shadow-none">
+            <div class="card-body p-3">
+                <div class="text-muted small text-uppercase fw-semibold mb-1">Industry</div>
+                <div class="fw-medium text-dark"><i class="{{ idea.industry.icon|default:'bi bi-briefcase' }} text-primary me-2"></i>{{ idea.industry.name|default:"Unassigned" }}</div>
             </div>
         </div>
-
-        <div class="d-flex flex-wrap gap-2 mb-4">
-            {% if idea.status == 'PUBLISHED' %}
-                <span class="badge bg-success fs-6">Published</span>
-            {% elif idea.status == 'ARCHIVED' %}
-                <span class="badge bg-warning text-dark fs-6">Archived</span>
-            {% else %}
-                <span class="badge bg-secondary fs-6">Draft</span>
-            {% endif %}
-            
-            <span class="badge bg-light text-dark border fs-6"><i class="bi bi-rocket me-1"></i> {{ idea.get_startup_stage_display }}</span>
-            
-            {% if idea.industry %}
-                <span class="badge bg-light text-dark border fs-6"><i class="{{ idea.industry.icon|default:'bi bi-briefcase' }} me-1"></i> {{ idea.industry.name }}</span>
-            {% endif %}
-            
-            {% for tag in idea.tags.all %}
-                <span class="badge bg-info text-dark fs-6">#{{ tag.name }}</span>
-            {% endfor %}
-        </div>
-
-        <p class="lead text-muted">{{ idea.short_description }}</p>
-
-        <div class="card shadow-sm border-0 mb-4 mt-5">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <h4 class="fw-bold text-primary"><i class="bi bi-exclamation-circle me-2"></i> The Problem</h4>
-            </div>
-            <div class="card-body pb-4">
-                {{ idea.problem_statement|linebreaks }}
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-white border-gray-200 shadow-none">
+            <div class="card-body p-3">
+                <div class="text-muted small text-uppercase fw-semibold mb-1">Stage</div>
+                <div class="fw-medium text-dark"><i class="bi bi-rocket text-success me-2"></i>{{ idea.get_startup_stage_display }}</div>
             </div>
         </div>
-
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <h4 class="fw-bold text-success"><i class="bi bi-check-circle me-2"></i> Proposed Solution</h4>
-            </div>
-            <div class="card-body pb-4">
-                {{ idea.proposed_solution|linebreaks }}
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-white border-gray-200 shadow-none">
+            <div class="card-body p-3">
+                <div class="text-muted small text-uppercase fw-semibold mb-1">Last Analyzed</div>
+                <div class="fw-medium text-dark"><i class="bi bi-clock-history text-muted me-2"></i>{{ idea.last_analyzed_at|date:"M d, Y"|default:"Never" }}</div>
             </div>
         </div>
-
-        <div class="row mb-4">
-            <div class="col-md-6 mb-4 mb-md-0">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                        <h5 class="fw-bold"><i class="bi bi-people me-2"></i> Target Audience</h5>
-                    </div>
-                    <div class="card-body pb-4 text-muted">
-                        {{ idea.target_audience|linebreaks }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                        <h5 class="fw-bold"><i class="bi bi-cash-coin me-2"></i> Business Model</h5>
-                    </div>
-                    <div class="card-body pb-4 text-muted">
-                        {% if idea.business_model %}
-                            {{ idea.business_model|linebreaks }}
-                        {% else %}
-                            <em class="text-black-50">Not specified yet.</em>
-                        {% endif %}
-                    </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-white border-gray-200 shadow-none">
+            <div class="card-body p-3">
+                <div class="text-muted small text-uppercase fw-semibold mb-1">Tags</div>
+                <div class="d-flex flex-wrap gap-1 mt-1">
+                    {% for tag in idea.tags.all %}
+                        <span class="badge bg-light text-dark border">{{ tag.name }}</span>
+                    {% empty %}
+                        <span class="text-muted small">None</span>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="col-lg-4">
-        <div class="card shadow-sm border-0 bg-light mb-4">
-            <div class="card-body">
-                <h6 class="text-uppercase text-muted fw-bold mb-3">Idea Details</h6>
-                
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-3">
-                        <small class="text-muted d-block">Created</small>
-                        <span class="fw-semibold">{{ idea.created_at|date:"M d, Y" }}</span>
-                    </li>
-                    <li class="mb-3">
-                        <small class="text-muted d-block">Last Updated</small>
-                        <span class="fw-semibold">{{ idea.updated_at|date:"M d, Y" }}</span>
-                    </li>
-                    <li class="mb-3">
-                        <small class="text-muted d-block">Last Analyzed</small>
-                        {% if idea.last_analyzed_at %}
-                            <span class="fw-semibold text-primary">{{ idea.last_analyzed_at|date:"M d, Y" }}</span>
-                        {% else %}
-                            <span class="fw-semibold text-muted">Never</span>
-                        {% endif %}
-                    </li>
-                    <li>
-                        <small class="text-muted d-block">Version</small>
-                        <span class="fw-semibold badge bg-secondary rounded-pill">v{{ idea.version }}</span>
-                    </li>
-                </ul>
+</div>
+{% endblock %}
+
+{% block workspace_tabs %}
+<li class="nav-item" role="presentation">
+    <button class="nav-link active text-dark fw-medium px-4" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">Overview</button>
+</li>
+<li class="nav-item" role="presentation">
+    <button class="nav-link text-muted px-4" id="research-tab" data-bs-toggle="tab" data-bs-target="#research" type="button" role="tab">Research</button>
+</li>
+<li class="nav-item" role="presentation">
+    <button class="nav-link text-muted px-4" id="assessment-tab" data-bs-toggle="tab" data-bs-target="#assessment" type="button" role="tab">Assessment</button>
+</li>
+<li class="nav-item" role="presentation">
+    <button class="nav-link text-muted px-4" id="roadmap-tab" data-bs-toggle="tab" data-bs-target="#roadmap" type="button" role="tab">Roadmap</button>
+</li>
+{% endblock %}
+
+{% block workspace_content %}
+<div class="tab-pane fade show active" id="overview" role="tabpanel">
+    <p class="lead text-muted mb-5" style="font-size: 1.1rem; line-height: 1.6;">{{ idea.short_description }}</p>
+
+    <div class="row g-4">
+        <div class="col-12">
+            <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 0.05em;">The Problem</h6>
+            <div class="p-4 bg-light rounded-3 border border-gray-200">
+                {{ idea.problem_statement|linebreaks }}
             </div>
         </div>
         
-        <div class="card shadow-sm border-0 border-primary border-start border-4">
-            <div class="card-body">
-                <h6 class="fw-bold text-primary mb-2">Research Engine</h6>
-                <p class="text-muted small mb-3">AI validation, competitor analysis, and market sizing for this idea.</p>
-                <button class="btn btn-sm btn-primary w-100 disabled" title="Coming in Phase 3">Analyze Idea <i class="bi bi-lock ms-1"></i></button>
+        <div class="col-12">
+            <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 0.05em;">Proposed Solution</h6>
+            <div class="p-4 bg-light rounded-3 border border-gray-200">
+                {{ idea.proposed_solution|linebreaks }}
             </div>
         </div>
+        
+        <div class="col-md-6">
+            <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 0.05em;">Target Audience</h6>
+            <div class="p-4 bg-light rounded-3 border border-gray-200 h-100">
+                {{ idea.target_audience|linebreaks }}
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 0.05em;">Business Model</h6>
+            <div class="p-4 bg-light rounded-3 border border-gray-200 h-100">
+                {% if idea.business_model %}
+                    {{ idea.business_model|linebreaks }}
+                {% else %}
+                    <em class="text-muted">Not specified yet.</em>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="research" role="tabpanel">
+    <div class="text-center p-5 text-muted">
+        <i class="bi bi-search fs-1 mb-3 d-block text-gray-300"></i>
+        <h5>Research Not Started</h5>
+        <p>Run the validation pipeline to generate research findings.</p>
+        <button class="btn btn-outline-primary mt-2">Analyze Idea</button>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="assessment" role="tabpanel">
+    <div class="text-center p-5 text-muted">
+        <i class="bi bi-clipboard2-check fs-1 mb-3 d-block text-gray-300"></i>
+        <h5>No Assessment Available</h5>
+        <p>Run the validation pipeline to score this startup idea.</p>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="roadmap" role="tabpanel">
+    <div class="text-center p-5 text-muted">
+        <i class="bi bi-map fs-1 mb-3 d-block text-gray-300"></i>
+        <h5>No Roadmap Generated</h5>
+        <p>Complete the assessment to generate a customized execution roadmap.</p>
     </div>
 </div>
 {% endblock %}

@@ -2,7 +2,29 @@ from django import forms
 from .models import StartupIdea, Industry, Tag
 from .constants import StartupIdeaStatus, StartupStage
 
+from django.utils.text import slugify
+
+class DynamicTagMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def clean(self, value):
+        if value:
+            pks = []
+            for item in value:
+                if item.isdigit():
+                    pks.append(item)
+                else:
+                    # It's a new tag string, create it
+                    tag, created = Tag.objects.get_or_create(slug=slugify(item), defaults={'name': item})
+                    pks.append(str(tag.pk))
+            value = pks
+        return super().clean(value)
+
 class StartupIdeaForm(forms.ModelForm):
+    tags = DynamicTagMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(attrs={'class': 'form-select select2-tags'})
+    )
+
     class Meta:
         model = StartupIdea
         fields = [
@@ -22,7 +44,7 @@ class StartupIdeaForm(forms.ModelForm):
             'revenue_model': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'startup_stage': forms.Select(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
-            'tags': forms.SelectMultiple(attrs={'class': 'form-select'}),
+
             'version': forms.HiddenInput(),
         }
 

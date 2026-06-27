@@ -1,0 +1,32 @@
+<div class="card h-100 border-0 shadow-sm rounded-4">
+    <div class="card-body p-4 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+                <h6 class="text-muted text-uppercase fw-semibold mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">{{ title }}</h6>
+                <h3 class="mb-0 fw-bold {% if color_class %}text-{{ color_class }}{% else %}text-dark{% endif %}">{{ value }}</h3>
+            </div>
+            {% if icon %}
+            <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: var(--{% if color_class %}{{ color_class }}{% else %}gray-100{% endif %}-bg, var(--gray-100)); color: var(--{% if color_class %}{{ color_class }}{% else %}gray-700{% endif %}); font-size: 1.5rem;">
+                <i class="bi bi-{{ icon }}"></i>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="mt-auto pt-2">
+            {% if trend %}
+            <div class="d-flex align-items-center" style="font-size: 0.85rem;">
+                {% if trend == 'up' %}
+                <span class="text-success fw-medium me-2"><i class="bi bi-arrow-up-right me-1"></i>{{ trend_value }}</span>
+                {% elif trend == 'down' %}
+                <span class="text-danger fw-medium me-2"><i class="bi bi-arrow-down-right me-1"></i>{{ trend_value }}</span>
+                {% elif trend == 'neutral' %}
+                <span class="text-muted fw-medium me-2"><i class="bi bi-dash me-1"></i>{{ trend_value }}</span>
+                {% endif %}
+                <span class="text-muted">{{ trend_label|default:"vs last week" }}</span>
+            </div>
+            {% elif subtitle %}
+            <div class="text-muted" style="font-size: 0.85rem;">{{ subtitle }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>

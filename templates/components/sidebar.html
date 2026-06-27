@@ -1,0 +1,100 @@
+<aside class="app-sidebar">
+    <div class="d-flex align-items-center px-4 py-4 mb-2">
+        <a href="{% url 'startup_ideas:dashboard' %}" class="d-flex align-items-center text-decoration-none text-dark fs-5 fw-bold">
+            <i class="bi bi-layers text-primary me-2"></i> StartupLens
+        </a>
+    </div>
+
+    <div class="flex-grow-1 overflow-y-auto">
+        <ul class="sidebar-nav">
+            <!-- Home -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'startup_ideas:dashboard' %}" class="sidebar-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="bi bi-house-door"></i> Dashboard
+                </a>
+            </li>
+            
+            <!-- Ideas -->
+            <li class="sidebar-nav-item mt-2">
+                <div class="sidebar-heading">Ideas</div>
+                <a href="{% url 'startup_ideas:list' %}" class="sidebar-nav-link {% if 'ideas:list' in request.resolver_match.view_name or 'ideas:detail' in request.resolver_match.view_name %}active{% endif %}">
+                    <i class="bi bi-lightbulb"></i> Startup Ideas
+                </a>
+                <a href="{% url 'startup_ideas:create' %}" class="sidebar-nav-link {% if 'ideas:create' in request.resolver_match.view_name %}active{% endif %}">
+                    <i class="bi bi-plus-circle"></i> Create Startup
+                </a>
+            </li>
+
+            <!-- Pipeline -->
+            <li class="sidebar-nav-item mt-2">
+                <div class="sidebar-heading">Validation Pipeline</div>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-search"></i> Research
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-journal-text"></i> Knowledge
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-bar-chart-line"></i> Business Intelligence
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-clipboard2-check"></i> Assessment
+                </a>
+            </li>
+
+            <!-- Action -->
+            <li class="sidebar-nav-item mt-2">
+                <div class="sidebar-heading">Action & Execution</div>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-signpost-split"></i> Recommendations
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-map"></i> Roadmaps
+                </a>
+            </li>
+
+            <!-- Outputs -->
+            <li class="sidebar-nav-item mt-2">
+                <div class="sidebar-heading">Outputs</div>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-trophy"></i> Final Evaluation
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-file-earmark-pdf"></i> Reports
+                </a>
+            </li>
+
+            <!-- Ecosystem -->
+            <li class="sidebar-nav-item mt-2">
+                <div class="sidebar-heading">Ecosystem</div>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-stars"></i> AI Assistant
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-cpu"></i> ML Predictions
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-people"></i> Investors
+                </a>
+                <a href="#" class="sidebar-nav-link text-muted">
+                    <i class="bi bi-envelope"></i> Email Center
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="mt-auto p-3 border-top border-gray-200">
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="#" class="sidebar-nav-link">
+                    <i class="bi bi-gear"></i> Settings
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="#" class="sidebar-nav-link">
+                    <i class="bi bi-question-circle"></i> Help Center
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>

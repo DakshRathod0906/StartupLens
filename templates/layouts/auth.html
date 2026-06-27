@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block layout %}
+<div class="d-flex min-vh-100 bg-white">
+    <!-- Left Side: Benefits/Branding (Hidden on mobile) -->
+    <div class="d-none d-lg-flex col-lg-5 flex-column justify-content-between p-5 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, var(--gray-900) 0%, var(--brand-primary) 100%);">
+        
+        <!-- Abstract Background Pattern -->
+        <div class="position-absolute opacity-25" style="top: -10%; left: -10%; width: 120%; height: 120%; background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(59,130,246,0.2) 0%, transparent 50%); pointer-events: none;"></div>
+        
+        <div class="position-relative z-1">
+            <a href="/" class="d-inline-flex align-items-center text-white text-decoration-none fs-4 fw-bold mb-5">
+                <i class="bi bi-layers text-primary me-2"></i> StartupLens
+            </a>
+            
+            {% block auth_benefits %}
+            <div class="mt-5 pt-4">
+                <h2 class="display-6 fw-bold mb-4">Validate your startup idea before writing a line of code.</h2>
+                <div class="d-flex align-items-center mb-4 opacity-75">
+                    <i class="bi bi-check-circle-fill me-3 fs-5"></i>
+                    <span>Deterministic business rules & assessments</span>
+                </div>
+                <div class="d-flex align-items-center mb-4 opacity-75">
+                    <i class="bi bi-check-circle-fill me-3 fs-5"></i>
+                    <span>AI-powered executive commentary</span>
+                </div>
+                <div class="d-flex align-items-center opacity-75">
+                    <i class="bi bi-check-circle-fill me-3 fs-5"></i>
+                    <span>Automated investor matching</span>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+        
+        <div class="position-relative z-1 opacity-50 small">
+            &copy; 2026 StartupLens. All rights reserved.
+        </div>
+    </div>
+    
+    <!-- Right Side: Form Area -->
+    <div class="col-12 col-lg-7 d-flex align-items-center justify-content-center p-4 p-sm-5 bg-body">
+        <div class="w-100" style="max-width: 440px;">
+            <!-- Mobile Brand (Hidden on desktop) -->
+            <div class="d-lg-none mb-5 text-center">
+                <a href="/" class="d-inline-flex align-items-center text-dark text-decoration-none fs-4 fw-bold">
+                    <i class="bi bi-layers text-primary me-2"></i> StartupLens
+                </a>
+            </div>
+            
+            {% include 'partials/messages.html' %}
+            
+            {% block auth_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

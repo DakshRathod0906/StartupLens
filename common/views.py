@@ -3,4 +3,4 @@ from django.shortcuts import render, redirect
 def home(request):
     if request.user.is_authenticated:
         return redirect('startup_ideas:dashboard')
-    return render(request, 'base.html')
+    return render(request, 'landing/home.html')

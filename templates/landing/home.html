@@ -1,0 +1,726 @@
+{% load static common_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StartupLens — Multi-Perspective Startup Validation & Decision Support Platform</title>
+    <meta name="description" content="Validate your startup idea with structured research, business intelligence, assessments, AI commentary, machine learning predictions, and investor matching.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- Landing CSS -->
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+</head>
+<body class="landing-page">
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════════════════════ -->
+<nav class="landing-navbar navbar navbar-expand-lg" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="bi bi-layers"></i> StartupLens</a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navContent">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                <li class="nav-item"><a class="nav-link" href="#workflow">Workflow</a></li>
+                <li class="nav-item"><a class="nav-link" href="#reports">Reports</a></li>
+                <li class="nav-item"><a class="nav-link badge-soon" href="#pricing">Pricing</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'authentication:login' %}" class="btn-sl-outline btn-sl-sm">Login</a>
+                <a href="{% url 'authentication:register' %}" class="btn-sl-outline btn-sl-sm">Register</a>
+                <a href="{% url 'authentication:register' %}" class="btn-sl-primary btn-sl-sm">Get Started</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section class="hero-section" id="home">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <span class="section-badge blue">Multi-Perspective Validation</span>
+                <h1 class="hero-title">Validate Your Startup<br>Before You Build It.</h1>
+                <p class="hero-subtitle">
+                    StartupLens helps founders evaluate startup ideas through structured research,
+                    business intelligence, assessments, recommendations, execution roadmaps,
+                    AI commentary, and investor readiness reports.
+                </p>
+                <div class="d-flex gap-3 hero-buttons flex-wrap">
+                    <a href="{% url 'authentication:register' %}" class="btn-sl-primary">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Start Validation
+                    </a>
+                    <a href="#dashboard-preview" class="btn-sl-outline">
+                        <i class="bi bi-play-circle me-2"></i>View Demo
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-dashboard">
+                    <!-- Dashboard Mockup -->
+                    <div style="background: var(--sl-gray-50); padding: 24px;">
+                        <div class="d-flex align-items-center mb-3">
+                            <div style="width:10px;height:10px;border-radius:50%;background:#ef4444;margin-right:6px"></div>
+                            <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;margin-right:6px"></div>
+                            <div style="width:10px;height:10px;border-radius:50%;background:#10b981"></div>
+                            <div class="ms-auto" style="font-size:0.7rem;color:var(--sl-gray-400)">StartupLens Dashboard</div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-3">
+                                <div style="background:white;border-radius:10px;padding:12px;text-align:center;border:1px solid var(--sl-gray-200)">
+                                    <div style="font-size:0.6rem;color:var(--sl-gray-500);text-transform:uppercase">Score</div>
+                                    <div style="font-size:1.4rem;font-weight:800;color:var(--sl-primary)">87</div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div style="background:white;border-radius:10px;padding:12px;text-align:center;border:1px solid var(--sl-gray-200)">
+                                    <div style="font-size:0.6rem;color:var(--sl-gray-500);text-transform:uppercase">Readiness</div>
+                                    <div style="font-size:1.4rem;font-weight:800;color:var(--sl-emerald)">A+</div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div style="background:white;border-radius:10px;padding:12px;text-align:center;border:1px solid var(--sl-gray-200)">
+                                    <div style="font-size:0.6rem;color:var(--sl-gray-500);text-transform:uppercase">Risk</div>
+                                    <div style="font-size:1.4rem;font-weight:800;color:var(--sl-orange)">Low</div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div style="background:white;border-radius:10px;padding:12px;text-align:center;border:1px solid var(--sl-gray-200)">
+                                    <div style="font-size:0.6rem;color:var(--sl-gray-500);text-transform:uppercase">Tasks</div>
+                                    <div style="font-size:1.4rem;font-weight:800;color:var(--sl-gray-700)">12</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-7">
+                                <div style="background:white;border-radius:10px;padding:14px;border:1px solid var(--sl-gray-200);height:100px">
+                                    <div style="font-size:0.65rem;color:var(--sl-gray-500);text-transform:uppercase;margin-bottom:8px">Assessment Breakdown</div>
+                                    <div class="d-flex align-items-end gap-1" style="height:52px">
+                                        <div style="flex:1;background:var(--sl-primary);border-radius:4px 4px 0 0;height:85%"></div>
+                                        <div style="flex:1;background:var(--sl-primary);border-radius:4px 4px 0 0;height:70%"></div>
+                                        <div style="flex:1;background:var(--sl-emerald);border-radius:4px 4px 0 0;height:90%"></div>
+                                        <div style="flex:1;background:var(--sl-orange);border-radius:4px 4px 0 0;height:55%"></div>
+                                        <div style="flex:1;background:var(--sl-primary);border-radius:4px 4px 0 0;height:75%"></div>
+                                        <div style="flex:1;background:var(--sl-emerald);border-radius:4px 4px 0 0;height:80%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div style="background:white;border-radius:10px;padding:14px;border:1px solid var(--sl-gray-200);height:100px">
+                                    <div style="font-size:0.65rem;color:var(--sl-gray-500);text-transform:uppercase;margin-bottom:6px">Recommendations</div>
+                                    <div style="font-size:0.7rem;margin-bottom:4px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sl-red);margin-right:6px"></span>3 Critical</div>
+                                    <div style="font-size:0.7rem;margin-bottom:4px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sl-orange);margin-right:6px"></span>5 Medium</div>
+                                    <div style="font-size:0.7rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sl-emerald);margin-right:6px"></span>4 Low</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TRUST BAR
+     ═══════════════════════════════════════════════════════════ -->
+<section class="trust-section">
+    <div class="container">
+        <div class="row g-3 justify-content-center">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-item">
+                    <div class="trust-icon blue"><i class="bi bi-gear"></i></div>
+                    <div class="trust-value" data-count="10" data-suffix="+">0</div>
+                    <div class="trust-label">Validation Engines</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-item">
+                    <div class="trust-icon green"><i class="bi bi-list-check"></i></div>
+                    <div class="trust-value" data-count="100" data-suffix="+">0</div>
+                    <div class="trust-label">Evaluation Rules</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-item">
+                    <div class="trust-icon orange"><i class="bi bi-robot"></i></div>
+                    <div class="trust-value">AI</div>
+                    <div class="trust-label">Commentary</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-item">
+                    <div class="trust-icon blue"><i class="bi bi-file-earmark-pdf"></i></div>
+                    <div class="trust-value">PDF</div>
+                    <div class="trust-label">Reports</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-item">
+                    <div class="trust-icon green"><i class="bi bi-people"></i></div>
+                    <div class="trust-value">Match</div>
+                    <div class="trust-label">Investor Matching</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-item">
+                    <div class="trust-icon orange"><i class="bi bi-graph-up-arrow"></i></div>
+                    <div class="trust-value">ML</div>
+                    <div class="trust-label">Predictions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FEATURES
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section alt" id="features">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge blue">Platform Features</span>
+            <h2>Everything You Need to Validate</h2>
+            <p class="section-subtitle">12 integrated modules working together to give you a complete picture of your startup's viability.</p>
+        </div>
+        <div class="row g-4">
+            {% with features="bi-lightbulb,Startup Idea Management,Create and manage multiple startup ideas with industry tagging and versioning.|bi-search,Research Infrastructure,Automated web research from multiple providers with deduplication and credibility scoring.|bi-journal-text,Knowledge Extraction,Structured extraction of findings from research sources with confidence scoring.|bi-bar-chart-line,Business Intelligence,Transform raw findings into actionable business insights.|bi-clipboard2-check,Assessment Engine,Rule-based scoring across market opportunity and team and competition and financials.|bi-signpost-split,Recommendation Engine,Priority-ranked recommendations triggered by assessment scores.|bi-map,Roadmap Generator,Dependency-aware execution roadmap with scheduling and phase planning.|bi-trophy,Final Evaluation,Consolidated readiness score and executive summary from all modules.|bi-stars,AI Business Commentary,Gemini-powered executive reviews and SWOT analysis and mentor feedback.|bi-cpu,ML Prediction,Random Forest and XGBoost models for success probability estimation.|bi-people,Investor Matching,Compatibility scoring against investor preferences and funding stages.|bi-file-earmark-richtext,Executive PDF Reports,ReportLab-generated PDF reports with SHA-256 integrity verification." %}
+            {% for feature in features|split:"|" %}
+            {% with parts=feature|split:"," %}
+            <div class="col-md-6 col-lg-4 col-xl-3 reveal">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--sl-primary-light); color: var(--sl-primary);">
+                        <i class="bi {{ parts.0 }}"></i>
+                    </div>
+                    <h3>{{ parts.1 }}</h3>
+                    <p>{{ parts.2 }}</p>
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WORKFLOW
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section" id="workflow">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge green">How It Works</span>
+            <h2>Your Validation Journey</h2>
+            <p class="section-subtitle">A structured, deterministic pipeline from idea to investor-ready evaluation.</p>
+        </div>
+        <div class="row g-3 justify-content-center reveal">
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">1</div><i class="bi bi-lightbulb step-icon"></i><div class="step-title">Idea Submission</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">2</div><i class="bi bi-search step-icon"></i><div class="step-title">Research</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">3</div><i class="bi bi-journal-text step-icon"></i><div class="step-title">Knowledge</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">4</div><i class="bi bi-bar-chart step-icon"></i><div class="step-title">Intelligence</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">5</div><i class="bi bi-clipboard2-check step-icon"></i><div class="step-title">Assessment</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="workflow-step"><div class="step-number">6</div><i class="bi bi-signpost step-icon"></i><div class="step-title">Recommendations</div></div>
+            </div>
+        </div>
+        <div class="row g-3 justify-content-center mt-2 reveal">
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">7</div><i class="bi bi-map step-icon"></i><div class="step-title">Roadmap</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">8</div><i class="bi bi-trophy step-icon"></i><div class="step-title">Evaluation</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">9</div><i class="bi bi-stars step-icon"></i><div class="step-title">AI Commentary</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2 workflow-connector">
+                <div class="workflow-step"><div class="step-number">10</div><i class="bi bi-file-pdf step-icon"></i><div class="step-title">PDF Report</div></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="workflow-step"><div class="step-number">11</div><i class="bi bi-people step-icon"></i><div class="step-title">Investor Match</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     DASHBOARD PREVIEW
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section alt" id="dashboard-preview">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge blue">Analytics Dashboard</span>
+            <h2>Your Startup at a Glance</h2>
+            <p class="section-subtitle">Real-time metrics, assessments, and actionable insights in one unified view.</p>
+        </div>
+        <!-- Metric Cards -->
+        <div class="row g-4 mb-4 reveal">
+            <div class="col-6 col-lg">
+                <div class="preview-card">
+                    <div class="preview-label">Overall Score</div>
+                    <div class="preview-value blue">87<small style="font-size:0.5em">/100</small></div>
+                    <div class="progress-bar-sl"><div class="bar blue" data-width="87%"></div></div>
+                </div>
+            </div>
+            <div class="col-6 col-lg">
+                <div class="preview-card">
+                    <div class="preview-label">Readiness</div>
+                    <div class="preview-value emerald">High</div>
+                    <div class="progress-bar-sl"><div class="bar green" data-width="92%"></div></div>
+                </div>
+            </div>
+            <div class="col-6 col-lg">
+                <div class="preview-card">
+                    <div class="preview-label">Confidence</div>
+                    <div class="preview-value blue">91%</div>
+                    <div class="progress-bar-sl"><div class="bar blue" data-width="91%"></div></div>
+                </div>
+            </div>
+            <div class="col-6 col-lg">
+                <div class="preview-card">
+                    <div class="preview-label">Risk Level</div>
+                    <div class="preview-value orange">Low</div>
+                    <div class="progress-bar-sl"><div class="bar orange" data-width="25%"></div></div>
+                </div>
+            </div>
+            <div class="col-6 col-lg">
+                <div class="preview-card">
+                    <div class="preview-label">Opportunity</div>
+                    <div class="preview-value emerald">Strong</div>
+                    <div class="progress-bar-sl"><div class="bar green" data-width="88%"></div></div>
+                </div>
+            </div>
+        </div>
+        <!-- Recommendations -->
+        <div class="row g-4 reveal">
+            <div class="col-lg-6">
+                <div class="preview-card">
+                    <div class="preview-label mb-3">Top Recommendations</div>
+                    <div class="rec-item"><div class="rec-dot high"></div><div><strong>Develop competitive moat</strong> — High Priority</div></div>
+                    <div class="rec-item"><div class="rec-dot high"></div><div><strong>Validate pricing model</strong> — High Priority</div></div>
+                    <div class="rec-item"><div class="rec-dot medium"></div><div><strong>Expand target market research</strong> — Medium</div></div>
+                    <div class="rec-item"><div class="rec-dot low"></div><div><strong>Add social proof</strong> — Low Priority</div></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="preview-card">
+                    <div class="preview-label mb-3">Assessment Breakdown</div>
+                    <div class="d-flex justify-content-between mb-2"><span style="font-size:0.85rem">Market Opportunity</span><strong style="font-size:0.85rem">92%</strong></div>
+                    <div class="progress-bar-sl mb-3"><div class="bar blue" data-width="92%"></div></div>
+                    <div class="d-flex justify-content-between mb-2"><span style="font-size:0.85rem">Team Readiness</span><strong style="font-size:0.85rem">78%</strong></div>
+                    <div class="progress-bar-sl mb-3"><div class="bar green" data-width="78%"></div></div>
+                    <div class="d-flex justify-content-between mb-2"><span style="font-size:0.85rem">Financial Viability</span><strong style="font-size:0.85rem">85%</strong></div>
+                    <div class="progress-bar-sl mb-3"><div class="bar blue" data-width="85%"></div></div>
+                    <div class="d-flex justify-content-between mb-2"><span style="font-size:0.85rem">Competitive Position</span><strong style="font-size:0.85rem">71%</strong></div>
+                    <div class="progress-bar-sl"><div class="bar orange" data-width="71%"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WHY STARTUPLENS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section" id="about">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge orange">Why StartupLens?</span>
+            <h2>Traditional vs. Structured Validation</h2>
+        </div>
+        <div class="row g-4 justify-content-center reveal">
+            <div class="col-md-5">
+                <div class="compare-card traditional">
+                    <h3 class="mb-4">Traditional Validation</h3>
+                    <div class="compare-item"><i class="bi bi-x-circle-fill"></i> Guesswork-based decisions</div>
+                    <div class="compare-item"><i class="bi bi-x-circle-fill"></i> Manual, scattered research</div>
+                    <div class="compare-item"><i class="bi bi-x-circle-fill"></i> No structured scoring</div>
+                    <div class="compare-item"><i class="bi bi-x-circle-fill"></i> No execution roadmap</div>
+                    <div class="compare-item"><i class="bi bi-x-circle-fill"></i> No executive report</div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="compare-card startuplens">
+                    <h3 class="mb-4"><i class="bi bi-layers me-2"></i>StartupLens</h3>
+                    <div class="compare-item"><i class="bi bi-check-circle-fill"></i> Structured, deterministic validation</div>
+                    <div class="compare-item"><i class="bi bi-check-circle-fill"></i> Automated research pipeline</div>
+                    <div class="compare-item"><i class="bi bi-check-circle-fill"></i> AI-powered business commentary</div>
+                    <div class="compare-item"><i class="bi bi-check-circle-fill"></i> Investor matching engine</div>
+                    <div class="compare-item"><i class="bi bi-check-circle-fill"></i> Actionable execution roadmaps</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     AI INTELLIGENCE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section alt" id="ai">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge green">AI Intelligence</span>
+            <h2>AI as Your Analyst, Not Your Decision Maker</h2>
+            <p class="section-subtitle">Gemini-powered commentary provides context and perspective — all scores remain deterministic.</p>
+        </div>
+        <div class="row g-4 justify-content-center reveal">
+            <div class="col-6 col-md-4 col-lg">
+                <div class="ai-card"><div class="ai-icon"><i class="bi bi-file-text"></i></div><h3>Executive Review</h3><p style="font-size:0.85rem;color:var(--sl-gray-500)">C-suite ready analysis of your startup's position.</p></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg">
+                <div class="ai-card"><div class="ai-icon"><i class="bi bi-grid-3x3-gap"></i></div><h3>SWOT Analysis</h3><p style="font-size:0.85rem;color:var(--sl-gray-500)">Strengths, weaknesses, opportunities, and threats.</p></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg">
+                <div class="ai-card"><div class="ai-icon"><i class="bi bi-person-check"></i></div><h3>Founder Feedback</h3><p style="font-size:0.85rem;color:var(--sl-gray-500)">Personalized advice for the founding team.</p></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg">
+                <div class="ai-card"><div class="ai-icon"><i class="bi bi-cash-stack"></i></div><h3>Investor View</h3><p style="font-size:0.85rem;color:var(--sl-gray-500)">How investors would perceive your startup.</p></div>
+            </div>
+            <div class="col-6 col-md-4 col-lg">
+                <div class="ai-card"><div class="ai-icon"><i class="bi bi-mortarboard"></i></div><h3>Mentor Commentary</h3><p style="font-size:0.85rem;color:var(--sl-gray-500)">Experienced mentor perspective on growth.</p></div>
+            </div>
+        </div>
+        <div class="ai-note reveal">
+            <p><i class="bi bi-info-circle me-2"></i><strong>Important:</strong> AI provides insights and explanations only. All scores, grades, and evaluations are generated by deterministic business rules — never modified by AI.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MACHINE LEARNING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section" id="ml">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge blue">Machine Learning</span>
+            <h2>Predictive Intelligence</h2>
+            <p class="section-subtitle">Random Forest & XGBoost models trained on startup success patterns.</p>
+        </div>
+        <div class="row g-4 justify-content-center reveal">
+            <div class="col-6 col-lg-3">
+                <div class="ml-card">
+                    <div class="ml-ring">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" fill="none" stroke="#e2e8f0" stroke-width="6"/><circle class="progress-ring" cx="50" cy="50" r="42" fill="none" stroke="#2563eb" stroke-width="6" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" data-pct="78" style="transition: stroke-dashoffset 1.5s ease"/></svg>
+                        <span class="ml-value" style="color:var(--sl-primary)">78%</span>
+                    </div>
+                    <h3>Success Probability</h3>
+                    <p style="font-size:0.8rem;color:var(--sl-gray-500)">Likelihood of market traction</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="ml-card">
+                    <div class="ml-ring">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" fill="none" stroke="#e2e8f0" stroke-width="6"/><circle class="progress-ring" cx="50" cy="50" r="42" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" data-pct="22" style="transition: stroke-dashoffset 1.5s ease"/></svg>
+                        <span class="ml-value" style="color:var(--sl-red)">22%</span>
+                    </div>
+                    <h3>Failure Risk</h3>
+                    <p style="font-size:0.8rem;color:var(--sl-gray-500)">Estimated risk of failure</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="ml-card">
+                    <div class="ml-ring">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" fill="none" stroke="#e2e8f0" stroke-width="6"/><circle class="progress-ring" cx="50" cy="50" r="42" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" data-pct="85" style="transition: stroke-dashoffset 1.5s ease"/></svg>
+                        <span class="ml-value" style="color:var(--sl-emerald)">85%</span>
+                    </div>
+                    <h3>Growth Potential</h3>
+                    <p style="font-size:0.8rem;color:var(--sl-gray-500)">Scalability and growth score</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="ml-card">
+                    <div class="ml-ring">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" fill="none" stroke="#e2e8f0" stroke-width="6"/><circle class="progress-ring" cx="50" cy="50" r="42" fill="none" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" data-pct="72" style="transition: stroke-dashoffset 1.5s ease"/></svg>
+                        <span class="ml-value" style="color:var(--sl-orange)">72%</span>
+                    </div>
+                    <h3>Funding Readiness</h3>
+                    <p style="font-size:0.8rem;color:var(--sl-gray-500)">Preparedness for investment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     REPORTS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section alt" id="reports">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-4 mb-lg-0 reveal">
+                <span class="section-badge blue">Executive Reports</span>
+                <h2>Professional PDF Reports</h2>
+                <p style="color:var(--sl-gray-500);line-height:1.8">
+                    Every evaluation generates a comprehensive PDF report with SHA-256 integrity verification.
+                    Share with co-founders, mentors, incubators, and investors.
+                </p>
+                <a href="#" class="btn-sl-primary mt-3"><i class="bi bi-download me-2"></i>Download Sample Report</a>
+            </div>
+            <div class="col-lg-7 reveal">
+                <div class="report-preview">
+                    <div class="report-header">
+                        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;opacity:0.8;margin-bottom:6px">StartupLens</div>
+                        <h3 style="font-size:1.5rem;margin-bottom:4px">Executive Evaluation Report</h3>
+                        <p style="margin-bottom:0;opacity:0.7;font-size:0.9rem">Generated on June 27, 2026</p>
+                    </div>
+                    <div class="report-body">
+                        <div class="report-item"><i class="bi bi-check-circle"></i><span>Cover Page with Branding</span></div>
+                        <div class="report-item"><i class="bi bi-check-circle"></i><span>Executive Summary & Key Findings</span></div>
+                        <div class="report-item"><i class="bi bi-check-circle"></i><span>Assessment Scores & Grading</span></div>
+                        <div class="report-item"><i class="bi bi-check-circle"></i><span>Priority Recommendations</span></div>
+                        <div class="report-item"><i class="bi bi-check-circle"></i><span>Execution Roadmap & Timeline</span></div>
+                        <div class="report-item"><i class="bi bi-check-circle"></i><span>Visual Charts & Data Tables</span></div>
+                        <div class="report-item"><i class="bi bi-shield-check"></i><span>SHA-256 Integrity Checksum</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     INVESTOR MATCHING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section" id="investors">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge green">Investor Matching</span>
+            <h2>Connect With the Right Investors</h2>
+            <p class="section-subtitle">Automated compatibility scoring based on industry, stage, and investment preferences.</p>
+        </div>
+        <!-- Flow -->
+        <div class="row align-items-center justify-content-center mb-5 reveal">
+            <div class="col-auto">
+                <div class="investor-flow-step"><div class="flow-icon"><i class="bi bi-lightbulb"></i></div><div class="step-title">Your Startup</div></div>
+            </div>
+            <div class="col-auto flow-arrow"><i class="bi bi-arrow-right"></i></div>
+            <div class="col-auto">
+                <div class="investor-flow-step"><div class="flow-icon"><i class="bi bi-cpu"></i></div><div class="step-title">Compatibility Engine</div></div>
+            </div>
+            <div class="col-auto flow-arrow"><i class="bi bi-arrow-right"></i></div>
+            <div class="col-auto">
+                <div class="investor-flow-step"><div class="flow-icon"><i class="bi bi-people"></i></div><div class="step-title">Matched Investors</div></div>
+            </div>
+            <div class="col-auto flow-arrow"><i class="bi bi-arrow-right"></i></div>
+            <div class="col-auto">
+                <div class="investor-flow-step"><div class="flow-icon"><i class="bi bi-cash-coin"></i></div><div class="step-title">Funding</div></div>
+            </div>
+        </div>
+        <!-- Investor Cards -->
+        <div class="row g-4 reveal">
+            <div class="col-md-4">
+                <div class="investor-card">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h3 class="mb-0">TechVentures Capital</h3>
+                        <span class="match-badge high">92% Match</span>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)" class="mb-2">Industry: <strong>Technology, SaaS</strong></p>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)" class="mb-2">Stage: <strong>Seed, Series A</strong></p>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)">Ticket: <strong>$100K – $500K</strong></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="investor-card">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h3 class="mb-0">Horizon Growth Fund</h3>
+                        <span class="match-badge high">87% Match</span>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)" class="mb-2">Industry: <strong>FinTech, AI</strong></p>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)" class="mb-2">Stage: <strong>Pre-Seed, Seed</strong></p>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)">Ticket: <strong>$50K – $250K</strong></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="investor-card">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h3 class="mb-0">StartupBoost Angels</h3>
+                        <span class="match-badge medium">74% Match</span>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)" class="mb-2">Industry: <strong>EdTech, Healthcare</strong></p>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)" class="mb-2">Stage: <strong>Seed</strong></p>
+                    <p style="font-size:0.85rem;color:var(--sl-gray-500)">Ticket: <strong>$25K – $100K</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TESTIMONIALS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section alt">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge orange">Testimonials</span>
+            <h2>What Founders Say</h2>
+        </div>
+        <div class="row g-4 reveal">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars mb-3"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                    <p style="font-size:0.95rem;color:var(--sl-gray-700);margin-bottom:20px">"StartupLens gave me a structured framework to evaluate my idea. The assessment breakdown and roadmap were incredibly actionable."</p>
+                    <div class="d-flex align-items-center"><div class="testimonial-avatar">AR</div><div><strong style="font-size:0.9rem">Arjun Rao</strong><div style="font-size:0.8rem;color:var(--sl-gray-500)">Founder, HealthSync</div></div></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars mb-3"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                    <p style="font-size:0.95rem;color:var(--sl-gray-700);margin-bottom:20px">"The investor matching saved me weeks of research. I got connected with three relevant VCs within days of completing my evaluation."</p>
+                    <div class="d-flex align-items-center"><div class="testimonial-avatar">SP</div><div><strong style="font-size:0.9rem">Sarah Park</strong><div style="font-size:0.8rem;color:var(--sl-gray-500)">CEO, EduBridge</div></div></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars mb-3"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
+                    <p style="font-size:0.95rem;color:var(--sl-gray-700);margin-bottom:20px">"I used the PDF report in my pitch deck. The deterministic scoring gave investors confidence that the analysis wasn't AI hallucination."</p>
+                    <div class="d-flex align-items-center"><div class="testimonial-avatar">MK</div><div><strong style="font-size:0.9rem">Marcus Klein</strong><div style="font-size:0.8rem;color:var(--sl-gray-500)">Co-Founder, FinLedger</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FAQ
+     ═══════════════════════════════════════════════════════════ -->
+<section class="landing-section" id="faq">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <span class="section-badge blue">FAQ</span>
+            <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="row justify-content-center reveal">
+            <div class="col-lg-8">
+                <div class="accordion faq-accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">How does StartupLens work?</button></h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">StartupLens uses a structured pipeline: you submit your startup idea, and it goes through automated research, knowledge extraction, business intelligence analysis, assessment scoring, recommendation generation, roadmap planning, and final evaluation. Each step builds on the previous one to give you a comprehensive validation report.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">Are the scores AI-generated?</button></h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">No. All scores, grades, and readiness levels are calculated by deterministic business rules — not AI. AI is used only for commentary, SWOT analysis, and qualitative feedback. This ensures reproducible, trustworthy evaluations.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">Can I export reports?</button></h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">Yes. StartupLens generates professional PDF reports using ReportLab. Each report includes a SHA-256 integrity checksum, making it suitable for sharing with investors, mentors, and incubators.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">How is investor matching calculated?</button></h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">Investor matching uses a compatibility scoring algorithm that compares your startup's industry, stage, and funding needs against investor preferences. Each match includes a detailed explanation of why the investor is a good fit.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">What machine learning models are used?</button></h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">StartupLens uses Random Forest and XGBoost classifiers trained on startup success patterns. The model registry tracks algorithm versions, accuracy, precision, recall, and F1 scores for full transparency.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CTA
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cta-section" id="contact">
+    <div class="container position-relative">
+        <div class="reveal">
+            <h2 style="font-size:clamp(1.75rem,4vw,2.75rem);margin-bottom:16px">Ready to Validate Your Startup?</h2>
+            <p style="font-size:1.1rem;max-width:500px;margin:0 auto 32px">Join founders who trust structured validation over guesswork.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{% url 'authentication:register' %}" class="btn-sl-primary" style="background:white;color:var(--sl-primary);box-shadow:0 2px 8px rgba(0,0,0,0.15)">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Start Free
+                </a>
+                <a href="{% url 'authentication:register' %}" class="btn-sl-outline" style="border-color:rgba(255,255,255,0.4);color:white">
+                    <i class="bi bi-person-plus me-2"></i>Create Account
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════ -->
+<footer class="landing-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 mb-3">
+                <a href="#" class="footer-brand d-block mb-3"><i class="bi bi-layers me-1"></i> StartupLens</a>
+                <p style="font-size:0.9rem;max-width:280px">Multi-perspective startup validation and decision support platform for founders, mentors, and investors.</p>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <h5>Product</h5>
+                <a href="#features">Features</a>
+                <a href="#reports">Reports</a>
+                <a href="#ai">AI Commentary</a>
+                <a href="#">API</a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <h5>Company</h5>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms</a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <h5>Resources</h5>
+                <a href="#">Documentation</a>
+                <a href="#">Help Center</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <h5>Connect</h5>
+                <a href="#"><i class="bi bi-github me-2"></i>GitHub</a>
+                <a href="#"><i class="bi bi-linkedin me-2"></i>LinkedIn</a>
+                <a href="#"><i class="bi bi-twitter-x me-2"></i>Twitter</a>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p class="mb-0">&copy; 2026 StartupLens. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Landing JS -->
+<script src="{% static 'js/landing.js' %}"></script>
+</body>
+</html>
