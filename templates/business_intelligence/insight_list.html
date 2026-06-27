@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Business Insights</h2>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Version</th>
+                <th>Confidence</th>
+                <th>Idea</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for insight in insights %}
+            <tr>
+                <td><span class="badge bg-secondary">{{ insight.insight_type }}</span></td>
+                <td>{{ insight.title }}</td>
+                <td>
+                    {% if insight.status == 'GENERATED' %}
+                    <span class="badge bg-primary">Generated</span>
+                    {% elif insight.status == 'VERIFIED' %}
+                    <span class="badge bg-success">Verified</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Stale</span>
+                    {% endif %}
+                </td>
+                <td>v{{ insight.version }}</td>
+                <td>{{ insight.confidence_score }}</td>
+                <td>{{ insight.startup_idea.title }}</td>
+                <td><a href="{% url 'business_intelligence:insight_detail' insight.id %}" class="btn btn-sm btn-info">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

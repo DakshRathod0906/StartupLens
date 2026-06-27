@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Business Intelligence Dashboard</h2>
+    <div class="row mt-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Total Insights</h5>
+                    <p class="card-text fs-3">{{ stats.total_insights }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Competitors</h5>
+                    <p class="card-text fs-3">{{ stats.competition }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Avg Confidence</h5>
+                    <p class="card-text fs-3">{{ stats.average_confidence }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Stale Insights</h5>
+                    <p class="card-text fs-3">{{ stats.stale_insights }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <a href="{% url 'business_intelligence:insight_list' %}" class="btn btn-primary">View All Insights</a>
+    </div>
+</div>
+{% endblock %}
