@@ -8,4 +8,12 @@ class ReadinessLevel(models.TextChoices):
 
 class EvaluationStatus(models.TextChoices):
     GENERATED = "GENERATED", "Generated"
-    SUPERSEDED = "SUPERSEDED", "Superseded"
+    PUBLISHED = "PUBLISHED", "Published"
+    ARCHIVED = "ARCHIVED", "Archived"
+
+class AnalysisStepStatus(models.TextChoices):
+    PENDING = "PENDING", "Pending"
+    RUNNING = "RUNNING", "Running"
+    COMPLETED = "COMPLETED", "Completed"
+    FAILED = "FAILED", "Failed"
+    SKIPPED = "SKIPPED", "Skipped"

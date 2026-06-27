@@ -17,13 +17,30 @@ class RoadmapGenerationService:
         try:
             # 1. Resolve Recommendations
             active_recs = RecommendationResolverService.resolve_active(idea)
+            
+            # Versioning for fallback or normal
+            last_roadmap = Roadmap.objects.filter(startup_idea=idea).order_by('-version').first()
+            next_version = 1 if not last_roadmap else last_roadmap.version + 1
+            
             if not active_recs:
-                raise ValueError("No active recommendations to plan.")
+                logger.warning(f"No active recommendations to plan for idea {idea.id}.")
+                return Roadmap.objects.create(
+                    startup_idea=idea,
+                    version=next_version,
+                    status=RoadmapStatus.ACTIVE,
+                    summary="No active recommendations available to generate tasks."
+                )
                 
             # 2. Task Generation (Prototypes)
             prototypes = TaskGenerationService.generate_prototypes(active_recs)
             if not prototypes:
-                raise ValueError("No active task templates found for the given recommendations.")
+                logger.warning(f"No active task templates found for the given recommendations for idea {idea.id}.")
+                return Roadmap.objects.create(
+                    startup_idea=idea,
+                    version=next_version,
+                    status=RoadmapStatus.ACTIVE,
+                    summary="No active templates available to generate tasks."
+                )
                 
             with transaction.atomic():
                 # 3. Supersede old roadmaps

@@ -122,3 +122,58 @@ def idea_delete_view(request, slug):
         messages.success(request, "Startup idea deleted.")
         return redirect('startup_ideas:list')
     return render(request, 'startup_ideas/delete_confirm.html', {'idea': idea})
+
+from django.http import JsonResponse
+from evaluation.services.orchestrator import StartupAnalysisPipeline, AnalysisAlreadyRunningError
+
+@login_required
+def run_analysis_view(request, slug):
+    idea = get_object_or_404(StartupIdea, slug=slug, owner=request.user)
+    if request.method == 'POST':
+        try:
+            result = StartupAnalysisPipeline.run_analysis(idea, request.user)
+            if result['success']:
+                messages.success(request, "Analysis completed successfully.")
+            else:
+                messages.warning(request, f"Analysis finished with partial failures: {result['message']}")
+        except AnalysisAlreadyRunningError as e:
+            messages.warning(request, str(e))
+        except Exception as e:
+            messages.error(request, f"Analysis failed: {str(e)}")
+            
+        return redirect('startup_ideas:detail', slug=idea.slug)
+    return redirect('startup_ideas:detail', slug=idea.slug)
+
+@login_required
+def post_processing_view(request, slug, action):
+    idea = get_object_or_404(StartupIdea, slug=slug, owner=request.user)
+    if request.method == 'POST':
+        result = StartupAnalysisPipeline.run_post_processing(idea, action, request.user)
+        if result['success']:
+            messages.success(request, result['message'])
+        else:
+            messages.error(request, result['message'])
+    return redirect('startup_ideas:detail', slug=idea.slug)
+
+@login_required
+def analysis_status_api(request, slug):
+    idea = get_object_or_404(StartupIdea, slug=slug, owner=request.user)
+    
+    # Get the latest run
+    latest_run = idea.analysis_runs.first()
+    
+    steps = []
+    if latest_run:
+        for step in latest_run.steps.all():
+            steps.append({
+                'name': step.step_name,
+                'status': step.status,
+            })
+            
+    return JsonResponse({
+        'status': idea.analysis_status,
+        'progress': idea.analysis_progress,
+        'started_at': idea.analysis_started_at.isoformat() if idea.analysis_started_at else None,
+        'completed_at': idea.analysis_completed_at.isoformat() if idea.analysis_completed_at else None,
+        'steps': steps
+    })

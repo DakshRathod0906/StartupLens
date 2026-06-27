@@ -1,4 +1,5 @@
 {% extends "layouts/workspace.html" %}
+{% load common_tags %}
 
 {% block title %}{{ idea.title }} - StartupLens{% endblock %}
 
@@ -32,14 +33,17 @@
     {% else %}
         <a href="{% url 'startup_ideas:edit' idea.slug %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil me-1"></i> Edit</a>
         <a href="{% url 'startup_ideas:archive' idea.slug %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-archive me-1"></i> Archive</a>
-        <button class="btn btn-sm btn-primary" title="Analyze Idea"><i class="bi bi-search me-1"></i> Analyze</button>
+        <form action="{% url 'startup_ideas:delete' idea.slug %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i> Delete</button>
+        </form>
     {% endif %}
 {% endblock %}
 
 {% block workspace_stats %}
 <div class="row g-3">
     <div class="col-md-3">
-        <div class="card bg-white border-gray-200 shadow-none">
+        <div class="card bg-white border-gray-200 shadow-none h-100">
             <div class="card-body p-3">
                 <div class="text-muted small text-uppercase fw-semibold mb-1">Industry</div>
                 <div class="fw-medium text-dark"><i class="{{ idea.industry.icon|default:'bi bi-briefcase' }} text-primary me-2"></i>{{ idea.industry.name|default:"Unassigned" }}</div>
@@ -47,23 +51,15 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card bg-white border-gray-200 shadow-none">
+        <div class="card bg-white border-gray-200 shadow-none h-100">
             <div class="card-body p-3">
                 <div class="text-muted small text-uppercase fw-semibold mb-1">Stage</div>
                 <div class="fw-medium text-dark"><i class="bi bi-rocket text-success me-2"></i>{{ idea.get_startup_stage_display }}</div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-white border-gray-200 shadow-none">
-            <div class="card-body p-3">
-                <div class="text-muted small text-uppercase fw-semibold mb-1">Last Analyzed</div>
-                <div class="fw-medium text-dark"><i class="bi bi-clock-history text-muted me-2"></i>{{ idea.last_analyzed_at|date:"M d, Y"|default:"Never" }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-white border-gray-200 shadow-none">
+    <div class="col-md-6">
+        <div class="card bg-white border-gray-200 shadow-none h-100">
             <div class="card-body p-3">
                 <div class="text-muted small text-uppercase fw-semibold mb-1">Tags</div>
                 <div class="d-flex flex-wrap gap-1 mt-1">
@@ -82,6 +78,9 @@
 {% block workspace_tabs %}
 <li class="nav-item" role="presentation">
     <button class="nav-link active text-dark fw-medium px-4" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">Overview</button>
+</li>
+<li class="nav-item" role="presentation">
+    <button class="nav-link text-muted px-4" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab">Analysis Engine</button>
 </li>
 <li class="nav-item" role="presentation">
     <button class="nav-link text-muted px-4" id="research-tab" data-bs-toggle="tab" data-bs-target="#research" type="button" role="tab">Research</button>
@@ -133,28 +132,372 @@
     </div>
 </div>
 
-<div class="tab-pane fade" id="research" role="tabpanel">
-    <div class="text-center p-5 text-muted">
-        <i class="bi bi-search fs-1 mb-3 d-block text-gray-300"></i>
-        <h5>Research Not Started</h5>
-        <p>Run the validation pipeline to generate research findings.</p>
-        <button class="btn btn-outline-primary mt-2">Analyze Idea</button>
+<div class="tab-pane fade" id="analysis" role="tabpanel">
+    <div class="row g-4">
+        <!-- Main Pipeline Area -->
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">Deterministic Pipeline</h5>
+                <form action="{% url 'startup_ideas:run_analysis' idea.slug %}" method="post" id="runAnalysisForm">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" id="runAnalysisBtn" {% if idea.analysis_status == 'RUNNING' %}disabled{% endif %}>
+                        <i class="bi bi-play-fill me-1"></i> Run Analysis
+                    </button>
+                </form>
+            </div>
+            
+            <div class="card border-gray-200 shadow-sm mb-4">
+                <div class="card-header bg-light border-bottom border-gray-200 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold text-dark">Analysis Status</span>
+                        {% if idea.analysis_status == 'RUNNING' %}
+                            <span class="badge bg-warning text-dark"><i class="bi bi-arrow-repeat spin me-1"></i> Running</span>
+                        {% elif idea.analysis_status == 'COMPLETED' %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Completed</span>
+                        {% elif idea.analysis_status == 'PARTIAL' %}
+                            <span class="badge bg-info"><i class="bi bi-info-circle me-1"></i> Partial</span>
+                        {% elif idea.analysis_status == 'FAILED' %}
+                            <span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i> Failed</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Pending</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2 d-flex justify-content-between text-muted small fw-medium">
+                        <span>Progress</span>
+                        <span id="progressText">{{ idea.analysis_progress }}%</span>
+                    </div>
+                    <div class="progress mb-4" style="height: 10px;">
+                        <div id="progressBar" class="progress-bar {% if idea.analysis_status == 'RUNNING' %}progress-bar-striped progress-bar-animated bg-warning{% else %}bg-success{% endif %}" role="progressbar" style="width: {{ idea.analysis_progress }}%;"></div>
+                    </div>
+                    
+                    <div class="row text-muted small">
+                        <div class="col-6">
+                            <strong>Started:</strong> <span id="startedAt">{{ idea.analysis_started_at|date:"M d, Y H:i"|default:"-" }}</span>
+                        </div>
+                        <div class="col-6 text-end">
+                            <strong>Completed:</strong> <span id="completedAt">{{ idea.analysis_completed_at|date:"M d, Y H:i"|default:"-" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h6 class="fw-bold text-dark text-uppercase mb-3 mt-5" style="font-size: 0.8rem; letter-spacing: 0.05em;">Pipeline Checklist</h6>
+            <div class="card border-gray-200 shadow-sm">
+                <ul class="list-group list-group-flush" id="pipelineChecklist">
+                    {% for step in idea.analysis_runs.first.steps.all %}
+                    <li class="list-group-item py-3">
+                        <div class="d-flex align-items-center">
+                            {% if step.status == 'COMPLETED' %}
+                                <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                            {% elif step.status == 'RUNNING' %}
+                                <i class="bi bi-arrow-repeat text-warning spin me-3 fs-5"></i>
+                            {% elif step.status == 'FAILED' %}
+                                <i class="bi bi-x-circle-fill text-danger me-3 fs-5"></i>
+                            {% else %}
+                                <i class="bi bi-circle text-muted me-3 fs-5"></i>
+                            {% endif %}
+                            
+                            <div>
+                                <h6 class="mb-0 fw-medium">{{ step.step_name|replace_underscores|title }}</h6>
+                                {% if step.error_message %}
+                                    <small class="text-danger">{{ step.error_message }}</small>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="ms-auto text-muted small">
+                                {% if step.completed_at %}
+                                    {{ step.completed_at|time:"H:i:s" }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-4 text-center text-muted">
+                        <i class="bi bi-list-check fs-2 mb-2 d-block text-gray-300"></i>
+                        No pipeline execution history found.
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Post-Processing Sidebar -->
+        <div class="col-lg-4">
+            <h5 class="fw-bold mb-4">Post-Processing</h5>
+            
+            <div class="card border-gray-200 shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 fw-bold"><i class="bi bi-stars text-primary me-2"></i>AI Commentary</h6>
+                    </div>
+                    <p class="text-muted small mb-3">Generate read-only insights via Gemini API based on final evaluation.</p>
+                    <form action="{% url 'startup_ideas:post_process' idea.slug 'ai' %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-outline-primary w-100" {% if idea.analysis_status == 'RUNNING' or idea.analysis_status == 'PENDING' %}disabled{% endif %}>Generate AI Commentary</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card border-gray-200 shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 fw-bold"><i class="bi bi-file-earmark-pdf text-danger me-2"></i>PDF Report</h6>
+                    </div>
+                    <p class="text-muted small mb-3">Export the full analysis, roadmap, and recommendations to PDF.</p>
+                    <form action="{% url 'startup_ideas:post_process' idea.slug 'pdf' %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-outline-danger w-100" {% if idea.analysis_status == 'RUNNING' or idea.analysis_status == 'PENDING' %}disabled{% endif %}>Generate PDF Report</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card border-gray-200 shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 fw-bold"><i class="bi bi-people text-success me-2"></i>Investor Matches</h6>
+                    </div>
+                    <p class="text-muted small mb-3">Query the investor database for potential funding matches.</p>
+                    <form action="{% url 'startup_ideas:post_process' idea.slug 'investors' %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-outline-success w-100" {% if idea.analysis_status == 'RUNNING' or idea.analysis_status == 'PENDING' %}disabled{% endif %}>Find Investors</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card border-gray-200 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 fw-bold"><i class="bi bi-envelope text-info me-2"></i>Email Report</h6>
+                    </div>
+                    <p class="text-muted small mb-3">Send the completed executive summary and report to your inbox.</p>
+                    <form action="{% url 'startup_ideas:post_process' idea.slug 'email' %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-outline-info w-100" {% if idea.analysis_status == 'RUNNING' or idea.analysis_status == 'PENDING' %}disabled{% endif %}>Send Email</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
     </div>
+</div>
+
+<div class="tab-pane fade" id="research" role="tabpanel">
+    {% with research_job=idea.research_jobs.last %}
+    {% if research_job and research_job.status == 'COMPLETED' %}
+        <div class="p-3">
+            <h5 class="fw-bold mb-4">Research Findings</h5>
+            <div class="row g-4">
+                {% for source in research_job.sources.all %}
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <span class="badge bg-secondary mb-2">{{ source.provider }}</span>
+                            <h6 class="fw-bold"><a href="{{ source.original_url }}" target="_blank" class="text-decoration-none">{{ source.title }}</a></h6>
+                            <p class="text-muted small mb-0">{{ source.excerpt|truncatewords:30 }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 pt-0">
+                            <small class="text-muted">Credibility: {{ source.credibility_score }} / Domain: {{ source.domain }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No sources found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center p-5 text-muted">
+            <i class="bi bi-search fs-1 mb-3 d-block text-gray-300"></i>
+            <h5>Research Not Started</h5>
+            <p>Run the validation pipeline to generate research findings.</p>
+            <button class="btn btn-outline-primary mt-2" onclick="document.getElementById('analysis-tab').click()">Go to Analysis Engine</button>
+        </div>
+    {% endif %}
+    {% endwith %}
 </div>
 
 <div class="tab-pane fade" id="assessment" role="tabpanel">
-    <div class="text-center p-5 text-muted">
-        <i class="bi bi-clipboard2-check fs-1 mb-3 d-block text-gray-300"></i>
-        <h5>No Assessment Available</h5>
-        <p>Run the validation pipeline to score this startup idea.</p>
-    </div>
+    {% with overall=idea.overall_assessments.last categories=idea.category_assessments.all %}
+    {% if overall %}
+        <div class="p-3">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">Overall Score</h5>
+                <h3 class="fw-bold {% if overall.overall_score >= 80 %}text-success{% elif overall.overall_score >= 50 %}text-warning{% else %}text-danger{% endif %} mb-0">{{ overall.overall_score }}% ({{ overall.grade }})</h3>
+            </div>
+            <div class="p-4 bg-light rounded-3 border border-gray-200 mb-4">
+                {{ overall.summary|linebreaks }}
+            </div>
+            <h6 class="fw-bold mb-3">Category Assessments</h6>
+            <div class="row g-3">
+                {% for category in categories %}
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="fw-bold">{{ category.assessment_type }}</h6>
+                                <span class="fw-bold">{{ category.percentage }}%</span>
+                            </div>
+                            <div class="progress mb-3" style="height: 6px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ category.percentage }}%;"></div>
+                            </div>
+                            <p class="text-muted small mb-0">{{ category.summary|truncatewords:20 }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No category assessments found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center p-5 text-muted">
+            <i class="bi bi-clipboard2-check fs-1 mb-3 d-block text-gray-300"></i>
+            <h5>No Assessment Available</h5>
+            <p>Run the validation pipeline to score this startup idea.</p>
+        </div>
+    {% endif %}
+    {% endwith %}
 </div>
 
 <div class="tab-pane fade" id="roadmap" role="tabpanel">
-    <div class="text-center p-5 text-muted">
-        <i class="bi bi-map fs-1 mb-3 d-block text-gray-300"></i>
-        <h5>No Roadmap Generated</h5>
-        <p>Complete the assessment to generate a customized execution roadmap.</p>
-    </div>
+    {% with roadmap=idea.roadmaps.last %}
+    {% if roadmap %}
+        <div class="p-3">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">Execution Roadmap</h5>
+                <span class="badge bg-primary">{{ roadmap.completion_percentage }}% Complete</span>
+            </div>
+            {% if roadmap.summary %}
+                <p class="text-muted">{{ roadmap.summary }}</p>
+            {% endif %}
+            
+            <div class="timeline mt-4">
+                {% for task in roadmap.tasks.all %}
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="fw-bold">{{ task.title }}</h6>
+                            <span class="badge bg-light text-dark border">{{ task.phase }}</span>
+                        </div>
+                        <p class="text-muted small mt-2 mb-0">{{ task.description }}</p>
+                        <div class="mt-3 small">
+                            <span class="text-muted me-3"><i class="bi bi-clock me-1"></i> {{ task.estimated_days }} days</span>
+                            <span class="text-muted"><i class="bi bi-flag me-1"></i> {{ task.priority }} Priority</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No roadmap tasks generated.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center p-5 text-muted">
+            <i class="bi bi-map fs-1 mb-3 d-block text-gray-300"></i>
+            <h5>No Roadmap Generated</h5>
+            <p>Complete the assessment to generate a customized execution roadmap.</p>
+        </div>
+    {% endif %}
+    {% endwith %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+{% if idea.analysis_status == 'RUNNING' %}
+    document.addEventListener("DOMContentLoaded", function() {
+        startPolling();
+    });
+{% endif %}
+
+document.getElementById('runAnalysisForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const btn = document.getElementById('runAnalysisBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bi bi-arrow-repeat spin me-1"></i> Running...';
+    
+    // Disable post-processing buttons
+    document.querySelectorAll('.col-lg-4 form button').forEach(b => b.disabled = true);
+    
+    // Send the analysis request via AJAX
+    fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(response => {
+        // When it finally finishes, reload the page to show final state and messages
+        window.location.reload();
+    });
+    
+    // Start polling the status endpoint immediately
+    startPolling();
+});
+
+function startPolling() {
+    const statusUrl = "{% url 'startup_ideas:analysis_status' idea.slug %}";
+    
+    const pollInterval = setInterval(() => {
+        fetch(statusUrl)
+            .then(res => res.json())
+            .then(data => {
+                // Update Progress Bar
+                document.getElementById('progressText').innerText = data.progress + '%';
+                const bar = document.getElementById('progressBar');
+                bar.style.width = data.progress + '%';
+                
+                if (data.status === 'RUNNING') {
+                    bar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-warning';
+                } else if (data.status === 'FAILED') {
+                    bar.className = 'progress-bar bg-danger';
+                } else {
+                    bar.className = 'progress-bar bg-success';
+                }
+                
+                // Update Steps UI
+                if(data.steps && data.steps.length > 0) {
+                    let html = '';
+                    data.steps.forEach(step => {
+                        let icon = '<i class="bi bi-circle text-muted me-3 fs-5"></i>';
+                        if(step.status === 'COMPLETED') icon = '<i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>';
+                        else if(step.status === 'RUNNING') icon = '<i class="bi bi-arrow-repeat text-warning spin me-3 fs-5"></i>';
+                        else if(step.status === 'FAILED') icon = '<i class="bi bi-x-circle-fill text-danger me-3 fs-5"></i>';
+                        
+                        const stepName = step.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        
+                        html += `
+                        <li class="list-group-item py-3">
+                            <div class="d-flex align-items-center">
+                                ${icon}
+                                <div>
+                                    <h6 class="mb-0 fw-medium">${stepName}</h6>
+                                </div>
+                            </div>
+                        </li>
+                        `;
+                    });
+                    document.getElementById('pipelineChecklist').innerHTML = html;
+                }
+                
+                if (data.status !== 'RUNNING') {
+                    clearInterval(pollInterval);
+                    if(!document.getElementById('runAnalysisBtn').disabled) {
+                        window.location.reload();
+                    }
+                }
+            });
+    }, 1000);
+}
+</script>
+<style>
+.spin {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
 {% endblock %}

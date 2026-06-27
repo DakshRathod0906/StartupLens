@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
-from .constants import StartupIdeaStatus, StartupStage
+from .constants import StartupIdeaStatus, StartupStage, AnalysisStatus
 from .managers import StartupIdeaManager, StartupIdeaAllManager
 
 class Tag(models.Model):
@@ -56,7 +56,14 @@ class StartupIdea(models.Model):
     archived_at = models.DateTimeField(null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
+    
+    # Analysis Fields
+    analysis_status = models.CharField(max_length=20, choices=AnalysisStatus.choices, default=AnalysisStatus.PENDING)
+    analysis_progress = models.PositiveIntegerField(default=0)
+    analysis_started_at = models.DateTimeField(null=True, blank=True)
+    analysis_completed_at = models.DateTimeField(null=True, blank=True)
     last_analyzed_at = models.DateTimeField(null=True, blank=True)
+    
     version = models.PositiveIntegerField(default=1)
     
     # Audit Fields

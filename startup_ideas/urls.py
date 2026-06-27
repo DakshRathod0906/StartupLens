@@ -12,4 +12,9 @@ urlpatterns = [
     path('<slug:slug>/archive/', views.idea_archive_view, name='archive'),
     path('<slug:slug>/restore/', views.idea_restore_view, name='restore'),
     path('<slug:slug>/delete/', views.idea_delete_view, name='delete'),
+    
+    # Analysis Endpoints
+    path('<slug:slug>/analyze/', views.run_analysis_view, name='run_analysis'),
+    path('<slug:slug>/post-process/<str:action>/', views.post_processing_view, name='post_process'),
+    path('<slug:slug>/analysis-status/', views.analysis_status_api, name='analysis_status'),
 ]
