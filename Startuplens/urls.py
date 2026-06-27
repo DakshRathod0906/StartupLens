@@ -43,4 +43,5 @@ urlpatterns = [
     path('bi/', include('business_intelligence.urls')),
     path('assessment/', include('assessment.urls')),
     path('recommendations/', include('recommendations.urls')),
+    path('roadmaps/', include('roadmaps.urls')),
 ]

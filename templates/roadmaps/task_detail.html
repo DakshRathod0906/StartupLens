@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Task Details{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'roadmaps:dashboard' %}">Roadmaps</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'roadmaps:roadmap_detail' task.roadmap.id %}">{{ task.roadmap.startup_idea.title }} v{{ task.roadmap.version }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Task #{{ task.id }}</li>
+        </ol>
+    </nav>
+    
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">{{ task.title }}</h3>
+                <span class="badge bg-{{ task.status|yesno:'secondary,primary,success,danger' }} fs-6">{{ task.get_status_display }}</span>
+            </div>
+            <h6 class="card-subtitle mb-3 text-muted">Phase: {{ task.get_phase_display }} | Order: {{ task.order }}</h6>
+            
+            <p class="card-text">{{ task.description }}</p>
+            
+            <hr>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><strong>Estimated Effort:</strong> {{ task.estimated_days }} days</li>
+                        <li><strong>Priority:</strong> {{ task.get_priority_display }}</li>
+                        <li><strong>Template:</strong> {{ task.task_template.title }}</li>
+                        {% if task.started_at %}
+                        <li><strong>Started:</strong> {{ task.started_at }}</li>
+                        {% endif %}
+                        {% if task.completed_at %}
+                        <li><strong>Completed:</strong> {{ task.completed_at }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Dependencies</h5>
+                    {% if task.dependencies.count %}
+                    <ul class="list-group">
+                        {% for dep in task.dependencies.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{% url 'roadmaps:task_detail' dep.id %}">{{ dep.title }}</a>
+                            <span class="badge bg-{{ dep.status|yesno:'secondary,primary,success,danger' }} rounded-pill">{{ dep.get_status_display }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">No dependencies.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

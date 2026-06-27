@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Roadmap Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Roadmap Dashboard</h2>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Completion %</h5>
+                    <p class="card-text display-4">{{ stats.completion_percentage }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Tasks</h5>
+                    <p class="card-text display-4">{{ stats.total_tasks }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Blocked Tasks</h5>
+                    <p class="card-text display-4">{{ stats.blocked }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Critical Tasks</h5>
+                    <p class="card-text display-4">{{ stats.critical }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5">Recent Roadmaps</h3>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Startup Idea</th>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Completion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for roadmap in recent_roadmaps %}
+            <tr>
+                <td>{{ roadmap.startup_idea.title }}</td>
+                <td>v{{ roadmap.version }}</td>
+                <td>{{ roadmap.get_status_display }}</td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ roadmap.completion_percentage }}%;" aria-valuenow="{{ roadmap.completion_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ roadmap.completion_percentage }}%</div>
+                    </div>
+                </td>
+                <td>
+                    <a href="{% url 'roadmaps:roadmap_detail' roadmap.id %}" class="btn btn-sm btn-info">View Details</a>
+                    <a href="{% url 'roadmaps:roadmap_history' roadmap.startup_idea.id %}" class="btn btn-sm btn-secondary">History</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No active roadmaps found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

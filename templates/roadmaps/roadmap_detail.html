@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Roadmap Details{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'roadmaps:dashboard' %}">Roadmaps</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ roadmap.startup_idea.title }} v{{ roadmap.version }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Roadmap for {{ roadmap.startup_idea.title }} (v{{ roadmap.version }})</h2>
+            <p class="text-muted">{{ roadmap.summary }}</p>
+            <p><strong>Status:</strong> <span class="badge bg-{{ roadmap.status|yesno:'success,secondary,dark' }}">{{ roadmap.get_status_display }}</span></p>
+        </div>
+        <div class="col-md-4 text-end">
+            <h5>Overall Progress</h5>
+            <div class="progress mb-2">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ roadmap.completion_percentage }}%;">{{ roadmap.completion_percentage }}%</div>
+            </div>
+            <small>Estimated Completion: {{ roadmap.estimated_completion }} ({{ roadmap.overall_duration_days }} days)</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="mt-4">
+        {% for phase_name, tasks in phases.items %}
+        <div class="card mb-4 shadow-sm border-{{ phase_name|yesno:'primary,info,warning,danger' }}">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">{{ phase_name|title }}</h4>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for task in tasks %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'roadmaps:task_detail' task.id %}">
+                            <strong>{{ task.order }}. {{ task.title }}</strong>
+                        </a>
+                        <div class="text-muted small">
+                            <span class="me-3"><i class="bi bi-clock"></i> {{ task.estimated_days }} days</span>
+                            <span class="me-3">Priority: {{ task.get_priority_display }}</span>
+                            {% if task.dependencies.count %}
+                            <span><i class="bi bi-link"></i> Depends on {{ task.dependencies.count }} task(s)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <span class="badge bg-{{ task.status|yesno:'secondary,primary,success,danger' }} rounded-pill">{{ task.get_status_display }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">No tasks generated for this roadmap.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
