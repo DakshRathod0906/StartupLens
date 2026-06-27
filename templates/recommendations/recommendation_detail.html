@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ rec.title }} <span class="badge bg-secondary">v{{ rec.version }}</span></h2>
+    
+    <div class="card mt-4 mb-4 {% if rec.is_resolved %}border-success{% endif %}">
+        <div class="card-body">
+            <h5 class="card-title">Priority: {{ rec.priority }}</h5>
+            <p><strong>Category:</strong> {{ rec.category }}</p>
+            <p><strong>Status:</strong> 
+                {% if rec.is_resolved %}
+                    <span class="badge bg-success">Resolved on {{ rec.resolved_at|date:"Y-m-d H:i" }}</span>
+                {% else %}
+                    <span class="badge bg-primary">{{ rec.status }}</span>
+                {% endif %}
+            </p>
+            
+            <h5 class="mt-4">Description</h5>
+            <p class="bg-light p-3 border rounded">{{ rec.description }}</p>
+            
+            <h5 class="mt-4 text-primary">Recommended Action</h5>
+            <p class="bg-light p-3 border rounded border-primary">{{ rec.recommended_action }}</p>
+            
+            <h5 class="mt-4">Rule Metadata</h5>
+            <pre class="bg-light p-3 border rounded">{{ rec.metadata }}</pre>
+            
+        </div>
+    </div>
+    
+    <a href="{% url 'recommendations:recommendation_history' rec.id %}" class="btn btn-outline-secondary">View Version History</a>
+</div>
+{% endblock %}

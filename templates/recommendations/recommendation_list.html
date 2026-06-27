@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Recommendation Summaries</h2>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Idea</th>
+                <th>Version</th>
+                <th>Overall Priority</th>
+                <th>Total Recs</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in summaries %}
+            <tr>
+                <td>{{ s.startup_idea.title }}</td>
+                <td>v{{ s.version }}</td>
+                <td>
+                    {% if s.overall_priority == 'CRITICAL' %}<span class="badge bg-danger">{{ s.overall_priority }}</span>{% endif %}
+                    {% if s.overall_priority == 'HIGH' %}<span class="badge bg-warning text-dark">{{ s.overall_priority }}</span>{% endif %}
+                    {% if s.overall_priority == 'MEDIUM' %}<span class="badge bg-info">{{ s.overall_priority }}</span>{% endif %}
+                    {% if s.overall_priority == 'LOW' %}<span class="badge bg-secondary">{{ s.overall_priority }}</span>{% endif %}
+                    {% if s.overall_priority == 'OPTIONAL' %}<span class="badge bg-light text-dark">{{ s.overall_priority }}</span>{% endif %}
+                </td>
+                <td>{{ s.total_recommendations }}</td>
+                <td>{{ s.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <a href="{% url 'recommendations:summary_detail' s.id %}" class="btn btn-sm btn-info">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="mt-5">Active Recommendations</h2>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Priority</th>
+                <th>Category</th>
+                <th>Idea</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rec in active_recs %}
+            <tr {% if rec.is_resolved %}class="table-success"{% endif %}>
+                <td>
+                    {% if rec.priority == 'CRITICAL' %}<span class="badge bg-danger">{{ rec.priority }}</span>{% endif %}
+                    {% if rec.priority == 'HIGH' %}<span class="badge bg-warning text-dark">{{ rec.priority }}</span>{% endif %}
+                    {% if rec.priority == 'MEDIUM' %}<span class="badge bg-info">{{ rec.priority }}</span>{% endif %}
+                    {% if rec.priority == 'LOW' %}<span class="badge bg-secondary">{{ rec.priority }}</span>{% endif %}
+                    {% if rec.priority == 'OPTIONAL' %}<span class="badge bg-light text-dark">{{ rec.priority }}</span>{% endif %}
+                </td>
+                <td><span class="badge bg-secondary">{{ rec.category }}</span></td>
+                <td>{{ rec.startup_idea.title }}</td>
+                <td>{{ rec.title }}</td>
+                <td>
+                    {% if rec.is_resolved %}
+                    <span class="badge bg-success">Resolved</span>
+                    {% else %}
+                    <span class="badge bg-primary">Active</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'recommendations:recommendation_detail' rec.id %}" class="btn btn-sm btn-info">View</a>
+                    <a href="{% url 'recommendations:recommendation_history' rec.id %}" class="btn btn-sm btn-outline-secondary">History</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

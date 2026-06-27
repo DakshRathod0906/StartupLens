@@ -42,4 +42,5 @@ urlpatterns = [
     path('knowledge/', include('knowledge.urls')),
     path('bi/', include('business_intelligence.urls')),
     path('assessment/', include('assessment.urls')),
+    path('recommendations/', include('recommendations.urls')),
 ]
