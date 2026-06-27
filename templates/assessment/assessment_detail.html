@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ assessment.assessment_type }} Assessment v{{ assessment.version }}</h2>
+    
+    <div class="card mt-4 mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Score: {{ assessment.percentage }}% ({{ assessment.grade }})</h5>
+            <div class="progress mt-3 mb-3" style="height: 25px;">
+                <div class="progress-bar" role="progressbar" style="width: {{ assessment.percentage }}%;" aria-valuenow="{{ assessment.percentage }}" aria-valuemin="0" aria-valuemax="100">{{ assessment.percentage }}%</div>
+            </div>
+            <p><strong>Status:</strong> {{ assessment.status }}</p>
+            
+            <h5 class="mt-4">Summary</h5>
+            <p class="bg-light p-3 border rounded">{{ assessment.summary }}</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h5 class="text-success">Strengths</h5>
+                    <ul class="list-group">
+                        {% for s in assessment.strengths %}
+                        <li class="list-group-item list-group-item-success">{{ s }}</li>
+                        {% empty %}
+                        <li class="list-group-item">None identified.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-danger">Weaknesses</h5>
+                    <ul class="list-group">
+                        {% for w in assessment.weaknesses %}
+                        <li class="list-group-item list-group-item-danger">{{ w }}</li>
+                        {% empty %}
+                        <li class="list-group-item">None identified.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <h5 class="mt-4">Metadata</h5>
+            <pre class="bg-light p-3 border rounded">{{ assessment.metadata }}</pre>
+            
+        </div>
+    </div>
+    
+    <a href="{% url 'assessment:assessment_history' assessment.id %}" class="btn btn-outline-secondary">View Version History</a>
+</div>
+{% endblock %}

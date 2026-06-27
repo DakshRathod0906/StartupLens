@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Overall Assessments</h2>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Idea</th>
+                <th>Version</th>
+                <th>Score</th>
+                <th>Grade</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for o in overall %}
+            <tr>
+                <td>{{ o.startup_idea.title }}</td>
+                <td>v{{ o.version }}</td>
+                <td>{{ o.overall_score }}%</td>
+                <td><span class="badge bg-success">{{ o.grade }}</span></td>
+                <td>{{ o.created_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="mt-5">Category Assessments</h2>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Idea</th>
+                <th>Status</th>
+                <th>Version</th>
+                <th>Score</th>
+                <th>Grade</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in categories %}
+            <tr>
+                <td><span class="badge bg-secondary">{{ c.assessment_type }}</span></td>
+                <td>{{ c.startup_idea.title }}</td>
+                <td>
+                    {% if c.status == 'GENERATED' %}
+                    <span class="badge bg-primary">Active</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Superseded</span>
+                    {% endif %}
+                </td>
+                <td>v{{ c.version }}</td>
+                <td>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{ c.percentage }}%;" aria-valuenow="{{ c.percentage }}" aria-valuemin="0" aria-valuemax="100">{{ c.percentage }}%</div>
+                    </div>
+                </td>
+                <td>{{ c.grade }}</td>
+                <td>
+                    <a href="{% url 'assessment:assessment_detail' c.id %}" class="btn btn-sm btn-info">View</a>
+                    <a href="{% url 'assessment:assessment_history' c.id %}" class="btn btn-sm btn-outline-secondary">History</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

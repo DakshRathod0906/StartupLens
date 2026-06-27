@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Assessment Dashboard</h2>
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Assessments</h5>
+                    <p class="card-text fs-3">{{ stats.total_assessments }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Overall Avg Score</h5>
+                    <p class="card-text fs-3">{{ stats.overall_average }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Versions</h5>
+                    <p class="card-text fs-3">{{ stats.total_versions }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Highest Score</h5>
+                    <p class="card-text fs-4">{{ stats.highest_score }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Lowest Score</h5>
+                    <p class="card-text fs-4">{{ stats.lowest_score }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <a href="{% url 'assessment:assessment_list' %}" class="btn btn-primary">View All Assessments</a>
+    </div>
+</div>
+{% endblock %}

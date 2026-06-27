@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'research.apps.ResearchConfig',
     'knowledge.apps.KnowledgeConfig',
     'business_intelligence.apps.BusinessIntelligenceConfig',
+    'assessment.apps.AssessmentConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
