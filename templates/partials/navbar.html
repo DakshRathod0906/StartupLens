@@ -14,7 +14,7 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' and request.resolver_match.app_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard:home' %}">Dashboard</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' and request.resolver_match.app_name == 'startup_ideas' %}active{% endif %}" href="{% url 'startup_ideas:dashboard' %}">Dashboard</a>
                 </li>
                 {% endif %}
             </ul>

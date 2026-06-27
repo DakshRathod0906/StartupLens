@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Archive {{ idea.title }} - StartupLens{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'startup_ideas:list' %}">My Ideas</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'startup_ideas:detail' idea.slug %}">{{ idea.title }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Archive</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <div class="card shadow-sm border-warning border-2">
+            <div class="card-body p-5">
+                <i class="bi bi-archive text-warning" style="font-size: 4rem;"></i>
+                <h3 class="fw-bold mt-3">Archive Idea?</h3>
+                <p class="text-muted mt-3">
+                    Are you sure you want to archive <strong>"{{ idea.title }}"</strong>? 
+                    It will be hidden from your main dashboard but can be restored later.
+                </p>
+                
+                <form method="POST" class="mt-4">
+                    {% csrf_token %}
+                    <a href="{% url 'startup_ideas:detail' idea.slug %}" class="btn btn-light me-2">Cancel</a>
+                    <button type="submit" class="btn btn-warning fw-semibold">Yes, Archive Idea</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

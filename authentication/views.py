@@ -11,7 +11,7 @@ from .exceptions import AuthenticationError
 
 def register_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard:home')
+        return redirect('startup_ideas:dashboard')
         
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -20,7 +20,7 @@ def register_view(request):
                 user = RegistrationService.register_user(form.cleaned_data)
                 LoginService.login_user(request, username=user.email, password=form.cleaned_data['password'])
                 messages.success(request, "Registration successful. Welcome to StartupLens!")
-                return redirect('dashboard:home')
+                return redirect('startup_ideas:dashboard')
             except AuthenticationError as e:
                 messages.error(request, str(e))
     else:
@@ -30,7 +30,7 @@ def register_view(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard:home')
+        return redirect('startup_ideas:dashboard')
         
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -42,7 +42,7 @@ def login_view(request):
                     password=form.cleaned_data['password'],
                     remember_me=form.cleaned_data.get('remember_me', False)
                 )
-                return redirect('dashboard:home')
+                return redirect('startup_ideas:dashboard')
             except AuthenticationError as e:
                 messages.error(request, str(e))
     else:

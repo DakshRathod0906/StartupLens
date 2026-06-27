@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}{{ idea.title }} - StartupLens{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'startup_ideas:list' %}">My Ideas</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ idea.title }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="fw-bold mb-0">{{ idea.title }}</h1>
+            <div class="d-flex gap-2">
+                {% if idea.status == 'ARCHIVED' %}
+                    <a href="{% url 'startup_ideas:restore' idea.slug %}" class="btn btn-outline-primary fw-semibold"><i class="bi bi-arrow-counterclockwise me-1"></i> Restore</a>
+                {% else %}
+                    <a href="{% url 'startup_ideas:edit' idea.slug %}" class="btn btn-outline-primary fw-semibold"><i class="bi bi-pencil me-1"></i> Edit</a>
+                    <a href="{% url 'startup_ideas:archive' idea.slug %}" class="btn btn-outline-warning fw-semibold"><i class="bi bi-archive me-1"></i> Archive</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            {% if idea.status == 'PUBLISHED' %}
+                <span class="badge bg-success fs-6">Published</span>
+            {% elif idea.status == 'ARCHIVED' %}
+                <span class="badge bg-warning text-dark fs-6">Archived</span>
+            {% else %}
+                <span class="badge bg-secondary fs-6">Draft</span>
+            {% endif %}
+            
+            <span class="badge bg-light text-dark border fs-6"><i class="bi bi-rocket me-1"></i> {{ idea.get_startup_stage_display }}</span>
+            
+            {% if idea.industry %}
+                <span class="badge bg-light text-dark border fs-6"><i class="{{ idea.industry.icon|default:'bi bi-briefcase' }} me-1"></i> {{ idea.industry.name }}</span>
+            {% endif %}
+            
+            {% for tag in idea.tags.all %}
+                <span class="badge bg-info text-dark fs-6">#{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+
+        <p class="lead text-muted">{{ idea.short_description }}</p>
+
+        <div class="card shadow-sm border-0 mb-4 mt-5">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h4 class="fw-bold text-primary"><i class="bi bi-exclamation-circle me-2"></i> The Problem</h4>
+            </div>
+            <div class="card-body pb-4">
+                {{ idea.problem_statement|linebreaks }}
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h4 class="fw-bold text-success"><i class="bi bi-check-circle me-2"></i> Proposed Solution</h4>
+            </div>
+            <div class="card-body pb-4">
+                {{ idea.proposed_solution|linebreaks }}
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <h5 class="fw-bold"><i class="bi bi-people me-2"></i> Target Audience</h5>
+                    </div>
+                    <div class="card-body pb-4 text-muted">
+                        {{ idea.target_audience|linebreaks }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <h5 class="fw-bold"><i class="bi bi-cash-coin me-2"></i> Business Model</h5>
+                    </div>
+                    <div class="card-body pb-4 text-muted">
+                        {% if idea.business_model %}
+                            {{ idea.business_model|linebreaks }}
+                        {% else %}
+                            <em class="text-black-50">Not specified yet.</em>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 bg-light mb-4">
+            <div class="card-body">
+                <h6 class="text-uppercase text-muted fw-bold mb-3">Idea Details</h6>
+                
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3">
+                        <small class="text-muted d-block">Created</small>
+                        <span class="fw-semibold">{{ idea.created_at|date:"M d, Y" }}</span>
+                    </li>
+                    <li class="mb-3">
+                        <small class="text-muted d-block">Last Updated</small>
+                        <span class="fw-semibold">{{ idea.updated_at|date:"M d, Y" }}</span>
+                    </li>
+                    <li class="mb-3">
+                        <small class="text-muted d-block">Last Analyzed</small>
+                        {% if idea.last_analyzed_at %}
+                            <span class="fw-semibold text-primary">{{ idea.last_analyzed_at|date:"M d, Y" }}</span>
+                        {% else %}
+                            <span class="fw-semibold text-muted">Never</span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <small class="text-muted d-block">Version</small>
+                        <span class="fw-semibold badge bg-secondary rounded-pill">v{{ idea.version }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm border-0 border-primary border-start border-4">
+            <div class="card-body">
+                <h6 class="fw-bold text-primary mb-2">Research Engine</h6>
+                <p class="text-muted small mb-3">AI validation, competitor analysis, and market sizing for this idea.</p>
+                <button class="btn btn-sm btn-primary w-100 disabled" title="Coming in Phase 3">Analyze Idea <i class="bi bi-lock ms-1"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
