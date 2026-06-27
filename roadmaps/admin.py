@@ -19,7 +19,7 @@ class RoadmapAdmin(admin.ModelAdmin):
 
 @admin.register(RoadmapTask)
 class RoadmapTaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'roadmap', 'phase', 'order', 'priority', 'status')
+    list_display = ('title', 'roadmap', 'phase', 'dependency_level', 'execution_order', 'priority', 'status')
     list_filter = ('phase', 'status', 'priority')
     search_fields = ('title', 'roadmap__startup_idea__title')
     autocomplete_fields = ('roadmap', 'recommendation', 'task_template')

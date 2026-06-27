@@ -38,3 +38,14 @@ class SummaryService:
         roadmap.estimated_completion = estimated_completion
         roadmap.summary = summary_text
         roadmap.save()
+        
+        # Create Progress snapshot
+        from ..models import RoadmapProgress
+        RoadmapProgress.objects.create(
+            roadmap=roadmap,
+            total_tasks=total,
+            completed_tasks=completed,
+            blocked_tasks=blocked,
+            completion_percentage=completion_pct,
+            remaining_days=overall_duration
+        )

@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'assessment.apps.AssessmentConfig',
     'recommendations.apps.RecommendationsConfig',
     'roadmaps.apps.RoadmapsConfig',
+    'evaluation.apps.EvaluationConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

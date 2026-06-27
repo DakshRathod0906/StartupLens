@@ -16,7 +16,7 @@
                 <h3 class="card-title">{{ task.title }}</h3>
                 <span class="badge bg-{{ task.status|yesno:'secondary,primary,success,danger' }} fs-6">{{ task.get_status_display }}</span>
             </div>
-            <h6 class="card-subtitle mb-3 text-muted">Phase: {{ task.get_phase_display }} | Order: {{ task.order }}</h6>
+            <h6 class="card-subtitle mb-3 text-muted">Phase: {{ task.get_phase_display }} | Dependency Level: {{ task.dependency_level }} | Execution Order: {{ task.execution_order }}</h6>
             
             <p class="card-text">{{ task.description }}</p>
             

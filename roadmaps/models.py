@@ -69,18 +69,24 @@ class RoadmapTask(models.Model):
     recommendation = models.ForeignKey(
         'recommendations.Recommendation',
         on_delete=models.CASCADE,
-        related_name='roadmap_tasks'
+        related_name='roadmap_tasks',
+        null=True, blank=True
     )
+    recommendation_title_snapshot = models.CharField(max_length=200, blank=True)
+    recommendation_priority_snapshot = models.CharField(max_length=20, blank=True)
     task_template = models.ForeignKey(
         TaskTemplate,
         on_delete=models.PROTECT,
         related_name='generated_tasks'
     )
     phase = models.CharField(max_length=50, choices=RoadmapPhase.choices)
-    order = models.PositiveIntegerField(default=0)
+    dependency_level = models.PositiveIntegerField(default=0)
+    execution_order = models.PositiveIntegerField(default=0)
     title = models.CharField(max_length=200)
     description = models.TextField()
     estimated_days = models.PositiveIntegerField(default=1)
+    scheduled_start_day = models.PositiveIntegerField(default=1)
+    scheduled_end_day = models.PositiveIntegerField(default=1)
     priority = models.CharField(max_length=20, choices=RecommendationPriority.choices)
     status = models.CharField(max_length=50, choices=RoadmapTaskStatus.choices, default=RoadmapTaskStatus.PENDING)
     dependencies = models.ManyToManyField('self', symmetrical=False, blank=True, related_name='dependent_tasks')
@@ -96,7 +102,23 @@ class RoadmapTask(models.Model):
                 name='unique_roadmap_task_template'
             )
         ]
-        ordering = ['phase', 'order']
+        ordering = ['phase', 'dependency_level', 'execution_order']
 
     def __str__(self):
         return f"{self.title} ({self.phase})"
+
+class RoadmapProgress(models.Model):
+    roadmap = models.OneToOneField(
+        Roadmap,
+        on_delete=models.CASCADE,
+        related_name='progress'
+    )
+    total_tasks = models.PositiveIntegerField(default=0)
+    completed_tasks = models.PositiveIntegerField(default=0)
+    blocked_tasks = models.PositiveIntegerField(default=0)
+    completion_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    remaining_days = models.PositiveIntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Progress for {self.roadmap}"

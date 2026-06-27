@@ -51,7 +51,10 @@ class RoadmapGenerationService:
                 
                 # 7. Create RoadmapTasks
                 task_map = {}
-                order = 1
+                execution_order = 1
+                
+                # Simple scheduling assumption for now to satisfy fields
+                current_day = 1
                 
                 for template in sorted_templates:
                     rec = template_to_rec.get(template.id)
@@ -62,16 +65,22 @@ class RoadmapGenerationService:
                     task = RoadmapTask.objects.create(
                         roadmap=roadmap,
                         recommendation=rec,
+                        recommendation_title_snapshot=rec.matched_rule.title if (rec and rec.matched_rule) else "",
+                        recommendation_priority_snapshot=rec.priority if rec else "",
                         task_template=template,
                         phase=template.default_phase,
-                        order=order,
+                        dependency_level=0, # Simplified for now, real calculation would use DAG depth
+                        execution_order=execution_order,
                         title=template.title,
                         description=template.description,
                         estimated_days=template.estimated_days,
+                        scheduled_start_day=current_day,
+                        scheduled_end_day=current_day + template.estimated_days - 1,
                         priority=priority
                     )
                     task_map[template.id] = task
-                    order += 1
+                    execution_order += 1
+                    current_day += template.estimated_days
                     
                 # 8. Attach Dependencies (now that all tasks exist)
                 for template in sorted_templates:

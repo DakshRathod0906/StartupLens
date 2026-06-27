@@ -9,6 +9,10 @@ class RoadmapStatistics:
     critical: int
     completion_percentage: float
     remaining_days: int
+    graph_depth: int = 0
+    critical_path_length: int = 0
+    average_dependency_count: float = 0.0
+    leaf_tasks: int = 0
 
 class DashboardService:
     @staticmethod
