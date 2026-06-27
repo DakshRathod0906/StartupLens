@@ -88,8 +88,8 @@ WSGI_APPLICATION = 'Startuplens.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DATABASE_NAME', 'startuplens_db'),
+        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': BASE_DIR / 'db.sqlite3' if os.environ.get('DATABASE_ENGINE') == 'django.db.backends.sqlite3' else os.environ.get('DATABASE_NAME', 'startuplens_db'),
         'USER': os.environ.get('DATABASE_USER', 'postgres'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'postgres'),
         'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
