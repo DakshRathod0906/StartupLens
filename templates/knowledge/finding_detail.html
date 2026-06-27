@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Finding: {{ finding.title }}</h2>
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Metadata</h5>
+            <p><strong>Type:</strong> <span class="badge bg-secondary">{{ finding.finding_type }}</span></p>
+            <p><strong>Normalized Title:</strong> <code>{{ finding.normalized_title }}</code></p>
+            <p><strong>Confidence:</strong> {{ finding.confidence_score }}</p>
+            <p><strong>Extractor:</strong> {{ finding.extractor_name }}</p>
+            <p><strong>Processing Status:</strong> {{ finding.processing_status }}</p>
+            
+            <h5 class="mt-4">Description</h5>
+            <div class="bg-light p-3 border rounded">
+                {{ finding.description }}
+            </div>
+            
+            <h5 class="mt-4">Traceability Metadata</h5>
+            <pre class="bg-light p-3 border rounded">{{ finding.metadata }}</pre>
+            
+            <hr class="mt-4 mb-4">
+            <h5>Source Details</h5>
+            <p><strong>Original Source:</strong> <a href="{% url 'research:source_detail' finding.research_source.id %}">{{ finding.research_source.title }}</a></p>
+            <p><strong>Idea:</strong> {{ finding.startup_idea.title }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

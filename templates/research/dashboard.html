@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Research Dashboard</h2>
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Total Jobs</h5>
+                    <p class="card-text fs-3">{{ stats.total_jobs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Completed</h5>
+                    <p class="card-text fs-3">{{ stats.completed_jobs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Failed</h5>
+                    <p class="card-text fs-3">{{ stats.failed_jobs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sources</h5>
+                    <p class="card-text fs-3">{{ stats.total_sources }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <a href="{% url 'research:job_list' %}" class="btn btn-primary">View All Jobs</a>
+        <a href="{% url 'research:source_list' %}" class="btn btn-secondary">View All Sources</a>
+    </div>
+</div>
+{% endblock %}

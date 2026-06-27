@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Knowledge Dashboard</h2>
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Total Findings</h5>
+                    <p class="card-text fs-3">{{ stats.total_findings }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Competitors Identified</h5>
+                    <p class="card-text fs-3">{{ stats.competitors }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Avg Confidence</h5>
+                    <p class="card-text fs-3">{{ stats.average_confidence }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <a href="{% url 'knowledge:finding_list' %}" class="btn btn-primary">View All Findings</a>
+    </div>
+</div>
+{% endblock %}

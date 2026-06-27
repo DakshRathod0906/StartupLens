@@ -36,7 +36,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('common.urls')),
-    path('auth/', include('authentication.urls')),
-    path('ideas/', include('startup_ideas.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('ideas/', include('startup_ideas.urls')),
+    path('research/', include('research.urls')),
+    path('knowledge/', include('knowledge.urls')),
 ]

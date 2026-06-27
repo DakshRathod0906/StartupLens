@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Extracted Findings</h2>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Confidence</th>
+                <th>Idea</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for finding in findings %}
+            <tr>
+                <td><span class="badge bg-secondary">{{ finding.finding_type }}</span></td>
+                <td>{{ finding.title }}</td>
+                <td>{{ finding.confidence_score }}</td>
+                <td>{{ finding.startup_idea.title }}</td>
+                <td><a href="{% url 'knowledge:finding_detail' finding.id %}" class="btn btn-sm btn-info">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

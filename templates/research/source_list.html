@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>All Discovered Sources</h2>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Provider</th>
+                <th>Domain</th>
+                <th>Score</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for source in sources %}
+            <tr>
+                <td>{{ source.title }}</td>
+                <td>{{ source.provider }}</td>
+                <td>{{ source.domain }}</td>
+                <td>{{ source.credibility_score }}</td>
+                <td><a href="{% url 'research:source_detail' source.id %}" class="btn btn-sm btn-info">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

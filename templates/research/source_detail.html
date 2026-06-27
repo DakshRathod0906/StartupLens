@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Source: {{ source.title }}</h2>
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Details</h5>
+            <p><strong>Provider:</strong> {{ source.provider }}</p>
+            <p><strong>Original URL:</strong> <a href="{{ source.original_url }}" target="_blank">{{ source.original_url }}</a></p>
+            <p><strong>Canonical URL:</strong> {{ source.canonical_url }}</p>
+            <p><strong>Domain:</strong> {{ source.domain }}</p>
+            <p><strong>Credibility Score:</strong> {{ source.credibility_score }}</p>
+            <p><strong>Author:</strong> {{ source.author|default:"N/A" }}</p>
+            <p><strong>Published Date:</strong> {{ source.published_at|date|default:"N/A" }}</p>
+            <p><strong>Content Hash:</strong> <code>{{ source.content_hash }}</code></p>
+            
+            <h5 class="mt-4">Excerpt</h5>
+            <div class="bg-light p-3 border rounded">
+                {{ source.excerpt }}
+            </div>
+            
+            <h5 class="mt-4">Metadata</h5>
+            <pre class="bg-light p-3 border rounded">{{ source.metadata }}</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}

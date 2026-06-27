@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Research Jobs</h2>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Startup Idea</th>
+                <th>Status</th>
+                <th>Sources</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.id }}</td>
+                <td>{{ job.startup_idea.title }}</td>
+                <td>{{ job.status }}</td>
+                <td>{{ job.total_sources }}</td>
+                <td>{{ job.created_at|date }}</td>
+                <td><a href="{% url 'research:job_detail' job.id %}" class="btn btn-sm btn-info">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

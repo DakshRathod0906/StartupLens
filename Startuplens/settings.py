@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'dashboard.apps.DashboardConfig',
     'startup_ideas.apps.StartupIdeasConfig',
+    'research.apps.ResearchConfig',
+    'knowledge.apps.KnowledgeConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
